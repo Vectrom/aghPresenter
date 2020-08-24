@@ -1,11 +1,16 @@
 ## Spis funkcjonalności
+**Główna funkcjonalność**:
+- Wieloplatformowa (min. Linux + Windows) aplikacja do Wyświetlania plików PDF w oknie i na pełnym ekranie (widok prezentacji + widok prezentera) z wykorzystaniem biblioteki QT oraz Poppler.
 
-( *wersja robocza wg maila z 2020-08-03* -- **do zastanowienia i edycji !!!** )
+**Dodatkowe funkcjonalności:**
+- Zegar pokazujący aktualny czas lub timer odliczający czas do końca prezentacji (konfigurowalne)
+- Ostrzeżenia wizualne i/lub dźwiękowe o końcu czasu.
+- Możliwość rysowania, zaznaczania, zakreślania na slajdach
+- Przybliżanie, oddalanie slajdów
+- "Autoplay" z zadanym krokiem czasowym
+- Pokazywanie numeru slajdu, postępu
+- Pokazywanie notatek (z adnotacji PDF?) w widoku prezentera
+- Możliwość edycji notatek (przed uruchomieniem prezentacji)
 
-* podstawowa: wyświetlanie plików PDF w oknie i na pełnym ekranie, np. za pomocą biblioteki Poppler (oraz Qt?), tak żeby program działał na Linuksie i Windowsie
-* zegar pokazujący zadany czas/aktualny czas/etc (konfigurowalne) + ostrzeżenia wizualne/dźwiękowe o końcu czasu
-* możliwość "rysowania" po slajdzie, zaznaczania
-* "autoplay" z zadanym krokiem czasowym
-* pokazywanie numerów stron/postępu [np. jak linuksowy Okular]
-* (??) pokazywanie notatek (z adnotacji PDF?) tylko dla prezentującego = na laptopie, nie na rzutniku
-* (??) zdalna kontrola (przewijanie slajdów itp) przez sieć 
+**Do zastanowienia:**
+- Zdalna kontrola poprzez sieć 
