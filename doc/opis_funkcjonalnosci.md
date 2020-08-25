@@ -9,8 +9,8 @@
 - Przybliżanie, oddalanie slajdów
 - "Autoplay" z zadanym krokiem czasowym
 - Pokazywanie numeru slajdu, postępu
-- Pokazywanie notatek (z adnotacji PDF?) w widoku prezentera
-- Możliwość edycji notatek (przed uruchomieniem prezentacji)
 
 **Do zastanowienia:**
 - Zdalna kontrola poprzez sieć 
+- Pokazywanie notatek (z adnotacji PDF?) w widoku prezentera
+- Możliwość edycji notatek (przed uruchomieniem prezentacji)
