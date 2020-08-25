@@ -12,6 +12,7 @@
 - [NEW] lista "przygotowanych plików" do szybkiego wyboru/przełączania (np. zrealizowana jak lista miniatur stron po lewej w Okularze)
 
 **Do zastanowienia:**
+- [NEW] tłumaczenie UI na polski
 - Zdalna kontrola poprzez sieć 
 - Pokazywanie notatek (z adnotacji PDF?) w widoku prezentera
 - Możliwość edycji notatek (przed uruchomieniem prezentacji)
