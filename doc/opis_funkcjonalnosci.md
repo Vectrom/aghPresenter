@@ -9,6 +9,7 @@
 - Przybliżanie, oddalanie slajdów
 - "Autoplay" z zadanym krokiem czasowym
 - Pokazywanie numeru slajdu, postępu
+- [NEW] lista "przygotowanych plików" do szybkiego wyboru/przełączania (np. zrealizowana jak lista miniatur stron po lewej w Okularze)
 
 **Do zastanowienia:**
 - Zdalna kontrola poprzez sieć 
