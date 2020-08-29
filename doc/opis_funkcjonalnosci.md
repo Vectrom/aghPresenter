@@ -9,7 +9,7 @@
 - Przybliżanie, oddalanie slajdów
 - "Autoplay" z zadanym krokiem czasowym
 - Pokazywanie numeru slajdu, postępu
-- [NEW] lista "przygotowanych plików" do szybkiego wyboru/przełączania (np. zrealizowana jak lista miniatur stron po lewej w Okularze)
+- [NEW] lista "przygotowanych plików" do szybkiego wyboru/przełączania (np. zrealizowana jak lista miniatur stron po lewej w Okularze), być może z obsługą (open/save) jak "playlista" w odtwarzaczach multimediów?
 
 **Do zastanowienia:**
 - [NEW] tłumaczenie UI na polski
