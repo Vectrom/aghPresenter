@@ -8,7 +8,7 @@ include(cmake-includes/cmake-conan/conan.cmake)
 
 conan_add_remote(NAME vectrom
                  INDEX 0
-                 URL http://vps-ff98a27f.vps.ovh.net:8081/artifactory/api/conan/conan
+                 URL https://artifactory.plociennik.net/artifactory/api/conan/conan
                  VERIFY_SSL True)     
 
 conan_add_remote(NAME bincrafters 
