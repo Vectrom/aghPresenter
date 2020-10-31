@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.15.5)
 project(AGHPresenter VERSION 1.0)
 
 ###### Conan package manager configuration ######
+execute_process(COMMAND "python" "-m" "pip" "install" "conan")
+
 include(cmake-includes/cmake-conan/conan.cmake)
 
 conan_add_remote(NAME vectrom
