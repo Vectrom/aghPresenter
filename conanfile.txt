@@ -1,8 +1,10 @@
 [requires]
-qt/5.15.0@vectrom/stable
+qt/5.15.1@vectrom/stable
+poppler/20.11.0@vectrom/stable
 
 [options]
 qt:qttools=True
+poppler:with_qt=True
 
 [generators]
 cmake_find_package_multi

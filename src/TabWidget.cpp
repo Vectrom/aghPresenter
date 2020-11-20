@@ -1,0 +1,21 @@
+#include <QFileInfo>
+#include <QTabBar>
+
+#include "Tab.h"
+#include "TabWidget.h"
+
+TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent)
+{
+	setTabBarAutoHide(false);
+	setTabsClosable(true);
+	setMovable(true);
+	connect(this->tabBar(), &QTabBar::tabCloseRequested, this->tabBar(), &QTabBar::removeTab);
+}
+
+void TabWidget::AddTab(const Presentation& presentation)
+{
+	QWidget* tabContentWidget = new Tab(presentation, this);
+
+	const QString tabName = QFileInfo(presentation.GetFilePath()).baseName();
+	addTab(tabContentWidget, tabName);
+}

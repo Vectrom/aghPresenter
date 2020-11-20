@@ -4,6 +4,16 @@ set(MODULE_NAME ${CMAKE_PROJECT_NAME})
 
 set(MODULE_SOURCES
     main.cpp
+    MainWindow.cpp
+    MainWindow.h
+    Presentation.cpp
+    Presentation.h
+    PresentationWindow.cpp
+    PresentationWindow.h
+    Tab.cpp
+    Tab.h
+    TabWidget.cpp
+    TabWidget.h
 )
 
 add_executable(${MODULE_NAME} WIN32
@@ -19,6 +29,7 @@ target_include_directories(${MODULE_NAME}
 )
 
 target_link_libraries(${MODULE_NAME}
+    poppler::poppler
     qt::qt
 )
 

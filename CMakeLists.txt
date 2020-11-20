@@ -29,6 +29,7 @@ list(INSERT CMAKE_PREFIX_PATH 0 "${CMAKE_BINARY_DIR}")
 
 ###### Qt configuration ######
 find_package(qt REQUIRED CONFIG)
+find_package(poppler REQUIRED CONFIG)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
