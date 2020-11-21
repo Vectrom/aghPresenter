@@ -7,5 +7,7 @@ class TabWidget : public QTabWidget
 {
 public:
     TabWidget(QWidget* parent = nullptr);
-    void AddTab(const Presentation& presentation);
+    void AddTab(Presentation const& presentation);
+
+
 };

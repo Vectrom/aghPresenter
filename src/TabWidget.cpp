@@ -12,7 +12,7 @@ TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent)
 	connect(this->tabBar(), &QTabBar::tabCloseRequested, this->tabBar(), &QTabBar::removeTab);
 }
 
-void TabWidget::AddTab(const Presentation& presentation)
+void TabWidget::AddTab(Presentation const& presentation)
 {
 	QWidget* tabContentWidget = new Tab(presentation, this);
 

@@ -14,6 +14,8 @@ set(MODULE_SOURCES
     Tab.h
     TabWidget.cpp
     TabWidget.h
+    ThumbnailsListWidget.cpp
+    ThumbnailsListWidget.h
 )
 
 add_executable(${MODULE_NAME} WIN32
