@@ -9,7 +9,7 @@ TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent)
 	setTabBarAutoHide(false);
 	setTabsClosable(true);
 	setMovable(true);
-	connect(this->tabBar(), &QTabBar::tabCloseRequested, this->tabBar(), &QTabBar::removeTab);
+	connect(this->tabBar(), &QTabBar::tabCloseRequested, this, &QTabWidget::removeTab);
 }
 
 void TabWidget::AddTab(Presentation const& presentation)

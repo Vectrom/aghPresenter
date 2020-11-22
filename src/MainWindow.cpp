@@ -16,8 +16,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
 	this->addToolBar(&m_toolbar);
 	this->setCentralWidget(&m_tabWidget);
-
-	resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+	showMaximized();
 
 	m_toolbar.addAction(tr("Open document"), this, &MainWindow::OpenDocumentActionOnClick);
 

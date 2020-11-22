@@ -14,7 +14,7 @@ ThumbnailsListWidget::ThumbnailsListWidget(Presentation const&  presentation, QW
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(QString::number(i + 1));
         QPixmap thumbnail = QPixmap::fromImage(presentation.GetPage(i));
-        thumbnail = thumbnail.scaledToWidth(200);
+        thumbnail = thumbnail.scaledToWidth(200, Qt::SmoothTransformation);
         item->setData(Qt::DecorationRole, thumbnail);
         item->setData(PageRole, i);
         addItem(item);

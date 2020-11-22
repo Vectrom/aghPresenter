@@ -15,7 +15,8 @@ protected:
     void paintEvent(QPaintEvent* event) override;
 private:
     void PageOnChanged();
-    QLabel* m_pageImage;
+    QPixmap m_pageImagePixmap;
+    QLabel* m_pageImageLabel;
     Presentation m_presentation;
     ThumbnailsListWidget* m_thumbnailsList;
 };
