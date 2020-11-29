@@ -1,9 +1,9 @@
 #pragma once
-#include <QWidget>
+#include "PresentationBaseWindow.h"
 
-class PresentationWindow : public QWidget
+class PresentationWindow : public PresentationBaseWindow
 {
 public:
-    PresentationWindow(QWidget* parent = nullptr);
+    PresentationWindow(Presentation const& presentation, int startPage = 0, QWidget* parent = nullptr);
         
 };

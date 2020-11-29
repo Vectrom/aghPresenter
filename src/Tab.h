@@ -4,19 +4,20 @@
 #include <QWidget>
 
 #include "Presentation.h"
-#include "ThumbnailsListWidget.h"
+
+class ResizablePixmapLabel;
+class ThumbnailsListWidget;
 
 class Tab : public QWidget 
 {
 public:
     Tab(Presentation const& presentation, QWidget* parent = nullptr);
+    const Presentation& GetPresentation() const;
     void SetPresentationPage(int index);
-protected:
-    void paintEvent(QPaintEvent* event) override;
+
 private:
     void PageOnChanged();
-    QPixmap m_pageImagePixmap;
-    QLabel* m_pageImageLabel;
+    ResizablePixmapLabel* m_pageImageLabel;
     Presentation m_presentation;
     ThumbnailsListWidget* m_thumbnailsList;
 };

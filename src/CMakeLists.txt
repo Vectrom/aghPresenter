@@ -10,6 +10,12 @@ set(MODULE_SOURCES
     Presentation.h
     PresentationWindow.cpp
     PresentationWindow.h
+    PresentationBaseWindow.cpp
+    PresentationBaseWindow.h
+    PresenterWindow.cpp
+    PresenterWindow.h
+    ResizablePixmapLabel.cpp
+    ResizablePixmapLabel.h
     Tab.cpp
     Tab.h
     TabWidget.cpp
