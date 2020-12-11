@@ -65,7 +65,19 @@ void MainWindow::StartPresentation()
 
 void MainWindow::StartPresentationFromCurrentSlide()
 {
+	QWidget * currentTabWidget = m_tabWidget.currentWidget();
+	if (!currentTabWidget)
+		return;
 
+	Tab* currentTab = dynamic_cast<Tab*>(currentTabWidget);
+	if (!currentTab)
+		return;
+
+	int startPage = currentTab->GetNumberOfCurrentPage();
+	if (startPage == -1)
+		return;
+
+	StartPresentationFromSlide(startPage);
 }
 
 void MainWindow::StartPresentationFromSlide(int index)

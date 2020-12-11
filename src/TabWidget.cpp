@@ -17,5 +17,6 @@ void TabWidget::AddTab(Presentation const& presentation)
 	QWidget* tabContentWidget = new Tab(presentation, this);
 
 	const QString tabName = QFileInfo(presentation.GetFilePath()).baseName();
-	addTab(tabContentWidget, tabName);
+	int index = addTab(tabContentWidget, tabName);
+	setCurrentIndex(index);
 }

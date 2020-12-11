@@ -12,6 +12,7 @@ class Tab : public QWidget
 {
 public:
     Tab(Presentation const& presentation, QWidget* parent = nullptr);
+    int GetNumberOfCurrentPage() const;
     const Presentation& GetPresentation() const;
     void SetPresentationPage(int index);
 

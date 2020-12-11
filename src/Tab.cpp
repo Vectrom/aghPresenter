@@ -23,6 +23,15 @@ Tab::Tab(Presentation const& presentation, QWidget* parent) :
 	tabContentLayout->addWidget(m_pageImageLabel, 5);
 }
 
+int Tab::GetNumberOfCurrentPage() const
+{
+	QListWidgetItem * currentItem = m_thumbnailsList->currentItem();
+	if (!currentItem)
+		return -1;
+
+	return currentItem->data(PageRole).toInt();
+}
+
 const Presentation& Tab::GetPresentation() const
 {
 	return m_presentation;

@@ -23,6 +23,7 @@ ThumbnailsListWidget::ThumbnailsListWidget(Presentation const&  presentation, QW
     setFixedWidth(250);
 
     connect(this, &QListWidget::itemActivated, this, &ThumbnailsListWidget::ThumbnailOnClick);
+    setCurrentItem(item(0));
 }
 
 void ThumbnailsListWidget::ThumbnailOnClick(QListWidgetItem* thumbnail)

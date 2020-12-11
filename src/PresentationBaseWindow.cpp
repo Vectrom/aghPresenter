@@ -31,12 +31,35 @@ void PresentationBaseWindow::keyPressEvent(QKeyEvent* event)
     {
         close();
     }
-    else if (event->key() == Qt::Key_Right)
+    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Down || event->key() == Qt::Key_Space || event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
         NextPage();
         emit nextPageRequested();
     }
-    else if (event->key() == Qt::Key_Left)
+    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Up)
+    {
+        PreviousPage();
+        emit previousPageRequested();
+    }
+}
+
+void PresentationBaseWindow::mouseReleaseEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        NextPage();
+        emit nextPageRequested();
+    }
+}
+
+void PresentationBaseWindow::wheelEvent(QWheelEvent* event)
+{
+    if (event->angleDelta().y() > 0)
+    {
+        NextPage();
+        emit nextPageRequested();
+    }
+    else if (event->angleDelta().y() < 0)
     {
         PreviousPage();
         emit previousPageRequested();

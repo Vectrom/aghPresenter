@@ -12,8 +12,10 @@ public:
     void NextPage();
     void PreviousPage();
 protected:
-    void closeEvent(QCloseEvent* event);
-    void keyPressEvent(QKeyEvent* event);
+    void closeEvent(QCloseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void wheelEvent(QWheelEvent* event)override;
 
 signals:
     void windowClosed();
