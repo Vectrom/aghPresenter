@@ -4,6 +4,6 @@
 class PresenterWindow : public PresentationBaseWindow
 {
 public:
-    PresenterWindow(Presentation const& presentation, QWidget* parent = nullptr);
+    PresenterWindow(Presentation const& presentation, int startPage = 0, QWidget* parent = nullptr);
         
 };

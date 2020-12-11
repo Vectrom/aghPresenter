@@ -1,10 +1,22 @@
 #include <QKeyEvent>
+#include "Presentation.h"
 #include "PresentationBaseWindow.h"
 
-PresentationBaseWindow::PresentationBaseWindow(QWidget* parent)
-    : QWidget(parent, Qt::Window)
+PresentationBaseWindow::PresentationBaseWindow(Presentation const& presentation, int startPage, QWidget* parent)
+    : m_presentationWidget(PresentationWidget(presentation, startPage, this)),
+    QWidget(parent, Qt::Window)
 {
 
+}
+
+void PresentationBaseWindow::NextPage()
+{
+    m_presentationWidget.NextPage();
+}
+
+void PresentationBaseWindow::PreviousPage()
+{
+    m_presentationWidget.PreviousPage();
 }
 
 void PresentationBaseWindow::closeEvent(QCloseEvent* event)
@@ -16,5 +28,17 @@ void PresentationBaseWindow::closeEvent(QCloseEvent* event)
 void PresentationBaseWindow::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape)
+    {
         close();
+    }
+    else if (event->key() == Qt::Key_Right)
+    {
+        NextPage();
+        emit nextPageRequested();
+    }
+    else if (event->key() == Qt::Key_Left)
+    {
+        PreviousPage();
+        emit previousPageRequested();
+    }
 }

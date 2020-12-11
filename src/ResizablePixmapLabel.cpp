@@ -1,3 +1,4 @@
+#include <QPainter>
 #include "ResizablePixmapLabel.h"
 
 ResizablePixmapLabel::ResizablePixmapLabel(QWidget* parent, Qt::WindowFlags f) :

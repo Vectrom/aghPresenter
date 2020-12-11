@@ -12,6 +12,8 @@ set(MODULE_SOURCES
     PresentationWindow.h
     PresentationBaseWindow.cpp
     PresentationBaseWindow.h
+    PresentationWidget.cpp
+    PresentationWidget.h
     PresenterWindow.cpp
     PresenterWindow.h
     ResizablePixmapLabel.cpp

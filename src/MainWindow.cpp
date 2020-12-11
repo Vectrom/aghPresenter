@@ -9,6 +9,7 @@
 
 #include "MainWindow.h"
 #include "Presentation.h"
+#include "PresentationWidget.h"
 #include "PresentationWindow.h"
 #include "PresenterWindow.h"
 #include "Tab.h"
@@ -74,6 +75,7 @@ void MainWindow::StartPresentationFromSlide(int index)
 		return;
 
 	const QList<QScreen*> screens = QApplication::screens();
+	
 	PresentationWindow* presentationWindow = new PresentationWindow(presentation.value(), index, this);
 	presentationWindow->show();
 	if (screens.size() == 1)
@@ -82,16 +84,17 @@ void MainWindow::StartPresentationFromSlide(int index)
 		presentationWindow->windowHandle()->setScreen(QApplication::screens()[1]);
 
 	presentationWindow->showFullScreen();
-	connect(presentationWindow, &PresentationWindow::windowClosed, this, &QMainWindow::show);
 
 	if (screens.size() > 1) {
-		PresenterWindow* presenterWindow = new PresenterWindow(presentation.value(), this);
+		PresenterWindow* presenterWindow = new PresenterWindow(presentation.value(), index, this);
 		presenterWindow->show();
 		presenterWindow->windowHandle()->setScreen(QApplication::screens()[0]);
 		presenterWindow->showFullScreen();
 		connect(presentationWindow, &PresentationWindow::windowClosed, presenterWindow, &PresenterWindow::close);
 		connect(presenterWindow, &PresenterWindow::windowClosed, presentationWindow, &PresentationWindow::close);
+		connect(presentationWindow, &PresentationWindow::nextPageRequested, presenterWindow, &PresenterWindow::NextPage);
+		connect(presenterWindow, &PresenterWindow::nextPageRequested, presentationWindow, &PresentationWindow::NextPage);
+		connect(presentationWindow, &PresentationWindow::previousPageRequested, presenterWindow, &PresenterWindow::PreviousPage);
+		connect(presenterWindow, &PresenterWindow::previousPageRequested, presentationWindow, &PresentationWindow::PreviousPage);
 	}
-
-	this->hide();
 }
