@@ -62,29 +62,29 @@ jobs:
           path: build/AGHPresenter-*.*-*.zip
 
     Lnx:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          submodules: true
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            submodules: true
 
-      - name: Build
-        run: |
-          cmake -E remove_directory build
-          cmake -E make_directory build
-          cd build
-          cmake ..
-          cmake --build . --config Release 
+        - name: Build
+          run: |
+            cmake -E remove_directory build
+            cmake -E make_directory build
+            cd build
+            cmake ..
+            cmake --build . --config Release
 
-      - name: Pack
-        run: |
-          cd build
-          cpack
+        - name: Pack
+          run: |
+            cd build
+            cpack
 
-      - name: Upload
-        uses: actions/upload-artifact@v2
-        with:
-          name: AGHPresenter-Linux
-          path: build/AGHPresenter-*.*-*.zip
+        - name: Upload
+          uses: actions/upload-artifact@v2
+          with:
+            name: AGHPresenter-Linux
+            path: build/AGHPresenter-*.*-*.zip
 
