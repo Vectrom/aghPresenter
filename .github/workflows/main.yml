@@ -42,6 +42,11 @@ jobs:
         with:
           submodules: true
 
+      - name: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
       - name: Build
         run: |
           cmake -E remove_directory build
@@ -69,6 +74,11 @@ jobs:
         with:
           submodules: true
 
+      - name: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          
       - name: Build
         run: |
           cmake -E remove_directory build
