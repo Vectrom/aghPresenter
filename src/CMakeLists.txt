@@ -26,7 +26,7 @@ set(MODULE_SOURCES
     ThumbnailsListWidget.h
 )
 
-add_executable(${MODULE_NAME} WIN32
+add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
 )
 
@@ -43,6 +43,8 @@ target_link_libraries(${MODULE_NAME}
     qt::qt
 )
 
+
+
 # Set path to Qt tools (windeployqt, macdeployqt etc.)
 set(QT_TOOLS_DIR "$<$<CONFIG:Release>:${qt_LIB_DIRS_RELEASE}>$<$<CONFIG:Debug>:${qt_LIB_DIRS_DEBUG}>/../bin")
 
@@ -51,5 +53,8 @@ if(WIN32)
     add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
         COMMAND "${QT_TOOLS_DIR}/windeployqt.exe" "--no-compiler-runtime" "--no-translations" "$<TARGET_FILE:${MODULE_NAME}>"
         )
+elseif(APPLE)
+add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
+    COMMAND "${QT_TOOLS_DIR}/macdeployqt" "${CMAKE_BINARY_DIR}/src/${CONFIGURATION}/${MODULE_NAME}.app"
+    )
 endif()
-
