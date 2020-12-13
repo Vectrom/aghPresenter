@@ -98,7 +98,7 @@ void MainWindow::StartPresentationFromSlide(int index)
 	presentationWindow->showFullScreen();
 
 	if (screens.size() > 1) {
-		PresenterWindow* presenterWindow = new PresenterWindow(presentation.value(), index, this);
+		PresenterWindow* presenterWindow = new PresenterWindow(presentationWindow, presentation.value(), index, this);
 		presenterWindow->show();
 		presenterWindow->windowHandle()->setScreen(QApplication::screens()[0]);
 		presenterWindow->showFullScreen();
