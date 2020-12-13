@@ -55,6 +55,6 @@ if(WIN32)
         )
 elseif(APPLE)
 add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
-    COMMAND "${QT_TOOLS_DIR}/macdeployqt" "${CMAKE_BINARY_DIR}/src/${CONFIGURATION}/${MODULE_NAME}.app"
+    COMMAND "${QT_TOOLS_DIR}/macdeployqt" "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/${MODULE_NAME}.app"
     )
 endif()
