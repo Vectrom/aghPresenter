@@ -43,7 +43,14 @@ target_link_libraries(${MODULE_NAME}
     qt::qt
 )
 
+if(APPLE)
+    set_target_properties(${MODULE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/BundleInfo.plist.in)
 
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER       "com.aghpresenter.aghpresenter")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING  "AGHPresenter version: ${AGHPresenter_VERSION}")
+    set(MACOSX_BUNDLE_BUNDLE_NAME          "AGHPresenter")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION       "${AGHPresenter_VERSION}")
+endif()
 
 # Set path to Qt tools (windeployqt, macdeployqt etc.)
 set(QT_TOOLS_DIR "$<$<CONFIG:Release>:${qt_LIB_DIRS_RELEASE}>$<$<CONFIG:Debug>:${qt_LIB_DIRS_DEBUG}>/../bin")
