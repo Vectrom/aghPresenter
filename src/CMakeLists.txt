@@ -44,7 +44,10 @@ target_link_libraries(${MODULE_NAME}
 )
 
 if(APPLE)
-    set_target_properties(${MODULE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/BundleInfo.plist.in)
+    set_target_properties(${MODULE_NAME}
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/BundleInfo.plist.in
+    XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
+    )
 
     set(MACOSX_BUNDLE_GUI_IDENTIFIER       "com.aghpresenter.aghpresenter")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING  "AGHPresenter version: ${AGHPresenter_VERSION}")
