@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15.5)
 
 set(MODULE_NAME ${CMAKE_PROJECT_NAME})
 
-target_compile_options(MODULE_NAME PRIVATE -fPIC)
+target_compile_options(${MODULE_NAME} PRIVATE -fPIC)
 
 set(MODULE_SOURCES
     main.cpp
