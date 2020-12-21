@@ -30,6 +30,10 @@ add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
 )
 
+if(UNIX AND NOT APPLE)
+    target_compile_options(${MODULE_NAME} PRIVATE -fPIC)
+endif()
+
 target_include_directories(${MODULE_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
