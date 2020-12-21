@@ -44,7 +44,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(UNIX AND NOT APPLE)
-    target_compile_options(${MODULE_NAME} PRIVATE -fPIC)
+    target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -fPIC)
 endif()
 
 ###### Add sources ######
