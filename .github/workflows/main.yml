@@ -1,5 +1,8 @@
 name: BuildAndPack
 
+env:
+  CONAN_REVISIONS_ENABLED: 1
+
 on:
   push:
     branches: [ master ]
@@ -7,32 +10,32 @@ on:
     branches: [ master ]
 
 jobs:
-  # Win:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         submodules: true
+  Win:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-  #     - name: Build
-  #       run: |
-  #         cmake -E remove_directory build
-  #         cmake -E make_directory build
-  #         cd build
-  #         cmake .. -G "Visual Studio 16 2019"
-  #         cmake --build . --config Release
+      - name: Build
+        run: |
+          cmake -E remove_directory build
+          cmake -E make_directory build
+          cd build
+          cmake .. -G "Visual Studio 16 2019"
+          cmake --build . --config Release
 
-  #     - name: Pack
-  #       run: |
-  #         cd build
-  #         cpack
+      - name: Pack
+        run: |
+          cd build
+          cpack
 
-  #     - name: Upload
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: AGHPresenter-Win64
-  #         path: build/AGHPresenter-*.*-*.zip
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: AGHPresenter-Win64
+          path: build/AGHPresenter-*.*-*.zip
 
   Mac:
     runs-on: macos-latest
