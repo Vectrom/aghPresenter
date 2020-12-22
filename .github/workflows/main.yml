@@ -10,6 +10,10 @@ on:
     branches: [ master ]
   workflow_dispatch:
     inputs:
+      Windows:
+        description: 'Build Windows?'     
+        required: true
+        default: 'true'
       MacOS:
         description: 'Build MacOS?'     
         required: true
@@ -22,6 +26,7 @@ on:
 jobs:
   Win:
     runs-on: windows-latest
+    if: github.event.inputs.Windows == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -49,7 +54,7 @@ jobs:
 
   Mac:
     runs-on: macos-latest
-    if: github.github.event.inputs.MacOS == 'true'
+    if: github.event.inputs.MacOS == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -82,7 +87,7 @@ jobs:
 
   Lnx:
     runs-on: ubuntu-latest
-    if:  github.github.event.inputs.Linux == 'true'
+    if:  github.event.inputs.Linux == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
