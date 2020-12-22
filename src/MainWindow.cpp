@@ -12,6 +12,7 @@
 #include "PresentationWidget.h"
 #include "PresentationWindow.h"
 #include "PresenterWindow.h"
+#include "SettingsDialog.h"
 #include "Tab.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget* parent)
 	m_toolbar.addAction(tr("Open document"), this, &MainWindow::OpenDocumentActionOnClick);
 	m_toolbar.addAction(tr("Start presentation"), this, &MainWindow::StartPresentation);
 	m_toolbar.addAction(tr("Start presentation from current slide"), this, &MainWindow::StartPresentationFromCurrentSlide);
+	m_toolbar.addAction(tr("Open settings"), this, &MainWindow::OpenSettingsDialog);
 }
 
 std::optional<Presentation> MainWindow::GetCurrentPresentation()
@@ -47,6 +49,12 @@ void MainWindow::OpenDocumentActionOnClick()
 		return;
 
 	LoadPdfFile(filePath);
+}
+
+void MainWindow::OpenSettingsDialog()
+{
+	SettingsDialog settingsDialog(this);
+	settingsDialog.exec();
 }
 
 void MainWindow::LoadPdfFile(const QString& filePath)

@@ -14,16 +14,21 @@ set(MODULE_SOURCES
     PresentationBaseWindow.h
     PresentationWidget.cpp
     PresentationWidget.h
+    PresenterEnums.h
     PresenterWindow.cpp
     PresenterWindow.h
     ResizablePixmapLabel.cpp
     ResizablePixmapLabel.h
+    SettingsDialog.cpp
+    SettingsDialog.h
     Tab.cpp
     Tab.h
     TabWidget.cpp
     TabWidget.h
     ThumbnailsListWidget.cpp
     ThumbnailsListWidget.h
+    Timer.cpp
+    Timer.h
 )
 
 add_executable(${MODULE_NAME} WIN32

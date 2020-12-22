@@ -16,6 +16,7 @@ private:
 
 	std::optional<Presentation> GetCurrentPresentation();
 	void OpenDocumentActionOnClick();
+	void OpenSettingsDialog();
 	void LoadPdfFile(const QString& fileName);
 	void StartPresentation();
 	void StartPresentationFromCurrentSlide();
