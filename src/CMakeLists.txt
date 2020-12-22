@@ -31,9 +31,13 @@ set(MODULE_SOURCES
     Timer.h
 )
 
-add_executable(${MODULE_NAME} WIN32
+add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
 )
+
+if(UNIX AND NOT APPLE)
+    target_compile_options(${MODULE_NAME} PRIVATE -fPIC)
+endif()
 
 target_include_directories(${MODULE_NAME}
     PRIVATE
@@ -48,6 +52,18 @@ target_link_libraries(${MODULE_NAME}
     qt::qt
 )
 
+if(APPLE)
+    set_target_properties(${MODULE_NAME}
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/BundleInfo.plist.in
+    XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
+    )
+
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER       "com.aghpresenter.aghpresenter")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING  "AGHPresenter version: ${AGHPresenter_VERSION}")
+    set(MACOSX_BUNDLE_BUNDLE_NAME          "AGHPresenter")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION       "${AGHPresenter_VERSION}")
+endif()
+
 # Set path to Qt tools (windeployqt, macdeployqt etc.)
 set(QT_TOOLS_DIR "$<$<CONFIG:Release>:${qt_LIB_DIRS_RELEASE}>$<$<CONFIG:Debug>:${qt_LIB_DIRS_DEBUG}>/../bin")
 
@@ -56,5 +72,8 @@ if(WIN32)
     add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
         COMMAND "${QT_TOOLS_DIR}/windeployqt.exe" "--no-compiler-runtime" "--no-translations" "$<TARGET_FILE:${MODULE_NAME}>"
         )
+elseif(APPLE)
+add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
+    COMMAND "${QT_TOOLS_DIR}/macdeployqt" "${CMAKE_BINARY_DIR}/bin/$<CONFIG>/${MODULE_NAME}.app"
+    )
 endif()
-

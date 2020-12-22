@@ -1,6 +1,6 @@
 [requires]
-qt/5.15.1@vectrom/stable
-poppler/20.11.0@vectrom/stable
+qt/5.15.1@vectrom/stable#c3bc8a3d5fc7d827baadc7e72114a889
+poppler/20.11.0@vectrom/stable#f7d20868f1d055542e997fd2be2e0a8a
 
 [options]
 qt:qttools=True
