@@ -27,8 +27,8 @@ bool Presentation::ReadPdfFile(QString const& fileName)
 	std::vector<std::thread> threads;
 	threads.resize(numberOfPages);
 
-	int x = QApplication::desktop()->physicalDpiX();
-	int y = QApplication::desktop()->physicalDpiY();
+	int x = QApplication::desktop()->logicalDpiX();
+	int y = QApplication::desktop()->logicalDpiY();
 
 	for (int i = 0; i < numberOfPages; i++)
 		threads[i] = std::thread(&Presentation::RenderPageToImage, this, document, i, x, y);
