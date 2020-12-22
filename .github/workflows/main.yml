@@ -8,15 +8,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch
 
 jobs:
   Win:
-    on:
-      push:
-        branches: [ master ]
-      pull_request:
-        branches: [ master ]
-
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -44,8 +39,8 @@ jobs:
           path: build/AGHPresenter-*.*-*.zip
 
   Mac:
-    on: workflow_dispatch
     runs-on: macos-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -77,8 +72,8 @@ jobs:
           path: build/AGHPresenter-*.*-*.zip
 
   Lnx:
-    on: workflow_dispatch
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
