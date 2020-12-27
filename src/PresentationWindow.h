@@ -5,6 +5,7 @@
 
 class PresentationWindow : public PresentationBaseWindow
 {
+    friend class PresenterWindow;
 public:
     PresentationWindow(Presentation const& presentation, int startPage = 0, QWidget* parent = nullptr);
         

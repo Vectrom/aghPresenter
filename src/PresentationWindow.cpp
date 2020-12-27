@@ -14,6 +14,7 @@ PresentationWindow::PresentationWindow(Presentation const& presentation, int sta
     : PresentationBaseWindow(presentation, startPage, parent)
 {
     QHBoxLayout* layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 1, 1);
     setLayout(layout);
 
     layout->addWidget(&m_presentationWidget);

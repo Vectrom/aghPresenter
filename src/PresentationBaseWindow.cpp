@@ -43,15 +43,6 @@ void PresentationBaseWindow::keyPressEvent(QKeyEvent* event)
     }
 }
 
-void PresentationBaseWindow::mouseReleaseEvent(QMouseEvent* event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        NextPage();
-        emit nextPageRequested();
-    }
-}
-
 void PresentationBaseWindow::wheelEvent(QWheelEvent* event)
 {
     if (event->angleDelta().y() > 0)

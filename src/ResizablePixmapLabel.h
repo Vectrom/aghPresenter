@@ -7,8 +7,9 @@ public:
     ResizablePixmapLabel(QWidget* parent = nullptr, Qt::WindowFlags f = {0});
     void setPixmap(QPixmap const& pixmap);
 protected:
-    void paintEvent(QPaintEvent* event) override;
-
-private:
+    void resizeEvent(QResizeEvent* event) override;
+    void UpdateMargins();
     QPixmap m_pixmap;
+private:
+  
 };
