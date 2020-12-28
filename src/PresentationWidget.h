@@ -11,8 +11,10 @@ public:
     void PreviousPage();
     void NextPagePreview();
     void PreviousPagePreview();
-    void DrawLine(const QPoint& startPoint, const QPoint& endPoint);
+    void DrawLine(const QPoint& startPoint, const QPoint& endPoint, const QColor& color);
     void SetDrawingEnabled(bool enabled);
+    const QColor& GetPenColor() const;
+    void SetPenColor(const QColor& color);
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -24,10 +26,11 @@ protected:
 signals:
     void nextPageRequested();
     void previousPageRequested();
-    void lineDrawn(const QPoint& startPoint, const QPoint& endPoint);
+    void lineDrawn(const QPoint& startPoint, const QPoint& endPoint, const QColor& color);
 
 private:
     Presentation m_presentation;
+    QColor m_penColor;
     int m_currentPage;
     bool m_isDrawingEnabled = false;
     bool m_isDrawing = false;

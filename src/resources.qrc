@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/open.png</file>
+    <file>images/playSlide.png</file>
+    <file>images/playStart.png</file>
+    <file>images/settings.png</file>
+    <file>images/edit.png</file>
+    <file>images/editFill.png</file>
+</qresource>
+</RCC>

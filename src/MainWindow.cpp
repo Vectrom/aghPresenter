@@ -2,6 +2,7 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QLabel>
+#include <QMenuBar>
 #include <QPushButton>
 #include <QWindow>
 #include <QHBoxLayout>
@@ -19,13 +20,34 @@ MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
 {
 	this->addToolBar(&m_toolbar);
+	m_toolbar.setFloatable(false);
+	m_toolbar.setMovable(false);
 	this->setCentralWidget(&m_tabWidget);
 	showMaximized();
 
-	m_toolbar.addAction(tr("Open document"), this, &MainWindow::OpenDocumentActionOnClick);
-	m_toolbar.addAction(tr("Start presentation"), this, &MainWindow::StartPresentation);
-	m_toolbar.addAction(tr("Start presentation from current slide"), this, &MainWindow::StartPresentationFromCurrentSlide);
-	m_toolbar.addAction(tr("Open settings"), this, &MainWindow::OpenSettingsDialog);
+	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
+	QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
+
+	QAction* openDocumentAction = new QAction(QIcon(":/images/open.png"), tr("Open document"));
+	connect(openDocumentAction, &QAction::triggered, this, &MainWindow::OpenDocumentActionOnClick);
+	fileMenu->addAction(openDocumentAction);
+	m_toolbar.addAction(openDocumentAction);
+
+	QAction* startPresentationAction = new QAction(QIcon(":/images/playStart.png"), tr("Start presentation"));
+	connect(startPresentationAction, &QAction::triggered, this, &MainWindow::StartPresentation);
+	presentationMenu->addAction(startPresentationAction);
+	m_toolbar.addAction(startPresentationAction);
+
+	QAction* startPresentationFromSlideAction = new QAction(QIcon(":/images/playSlide.png"), tr("Start presentation from current slide"));
+	connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::StartPresentationFromCurrentSlide);
+	presentationMenu->addAction(startPresentationFromSlideAction);
+	m_toolbar.addAction(startPresentationFromSlideAction);
+
+	QAction* openSettingsAction = new QAction(QIcon(":/images/settings.png"), tr("Open settings"));
+	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
+	settingsMenu->addAction(openSettingsAction);
+	m_toolbar.addAction(openSettingsAction);
 }
 
 std::optional<Presentation> MainWindow::GetCurrentPresentation()

@@ -129,17 +129,16 @@ void PresentationWidget::resizeEvent(QResizeEvent* event)
 
 void PresentationWidget::DrawLineTo(const QPoint& endPoint)
 {
-    DrawLine(m_lastPoint, endPoint);
+    DrawLine(m_lastPoint, endPoint, m_penColor);
     m_lastPoint = endPoint;
 }
 
-void PresentationWidget::DrawLine(const QPoint& startPoint, const QPoint& endPoint)
+void PresentationWidget::DrawLine(const QPoint& startPoint, const QPoint& endPoint, const QColor& color)
 {
     QPainter painter(&m_paintImages[m_currentPage]);
 
-    QColor myPenColor = Qt::blue;
     qreal myPenWidth = 1;
-    painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
+    painter.setPen(QPen(color, myPenWidth, Qt::SolidLine, Qt::RoundCap,
         Qt::RoundJoin));
 
     painter.drawLine(startPoint, endPoint);
@@ -148,12 +147,22 @@ void PresentationWidget::DrawLine(const QPoint& startPoint, const QPoint& endPoi
 
     update(QRect(startPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
 
-    emit lineDrawn(startPoint, endPoint);
+    emit lineDrawn(startPoint, endPoint, color);
 }
 
 void PresentationWidget::SetDrawingEnabled(bool enabled)
 {
     m_isDrawingEnabled = enabled;
+}
+
+const QColor& PresentationWidget::GetPenColor() const
+{
+    return m_penColor;
+}
+
+void PresentationWidget::SetPenColor(const QColor& color)
+{
+    m_penColor = color;
 }
 
 void PresentationWidget::ResizePaintImage(QImage* image, const QSize& newSize)

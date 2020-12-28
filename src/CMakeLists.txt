@@ -31,6 +31,8 @@ set(MODULE_SOURCES
     Timer.h
 )
 
+qt5_add_resources(MODULE_SOURCES resources.qrc)
+
 add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
 )
