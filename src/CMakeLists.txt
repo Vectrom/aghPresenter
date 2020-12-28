@@ -33,6 +33,7 @@ set(MODULE_SOURCES
 
 qt5_add_resources(RESOURCE_SOURCES resources.qrc)
 source_group("Resource files" FILES ${RESOURCE_SOURCES})
+source_group("Resource files" FILES resources.qrc)
 
 add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
