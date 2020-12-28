@@ -31,10 +31,12 @@ set(MODULE_SOURCES
     Timer.h
 )
 
-qt5_add_resources(MODULE_SOURCES resources.qrc)
+qt5_add_resources(RESOURCE_SOURCES resources.qrc)
+source_group("Resource files" FILES ${RESOURCE_SOURCES})
 
 add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
+    ${RESOURCE_SOURCES}    
 )
 
 if(UNIX AND NOT APPLE)
