@@ -26,10 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
 	this->setCentralWidget(&m_tabWidget);
 	showMaximized();
 
-	if (isMacOSDarkMode())
-		QIcon::setThemeName("dark");
-	else
-		QIcon::setThemeName("light");
+	SetIconThemeAccordingToMacOsMode();
 
 	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
 	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
@@ -54,6 +51,13 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
 	settingsMenu->addAction(openSettingsAction);
 	m_toolbar.addAction(openSettingsAction);
+}
+
+bool MainWindow::event(QEvent* event)
+{
+	SetIconThemeAccordingToMacOsMode();
+
+	return QMainWindow::event(event);
 }
 
 std::optional<Presentation> MainWindow::GetCurrentPresentation()
@@ -145,4 +149,12 @@ void MainWindow::StartPresentationFromSlide(int index)
 		connect(presentationWindow, &PresentationWindow::previousPageRequested, presenterWindow, &PresenterWindow::PreviousPage);
 		connect(presenterWindow, &PresenterWindow::previousPageRequested, presentationWindow, &PresentationWindow::PreviousPage);
 	}
+}
+
+void MainWindow::SetIconThemeAccordingToMacOsMode()
+{
+	if (isMacOSDarkMode())
+		QIcon::setThemeName("dark");
+	else
+		QIcon::setThemeName("light");
 }
