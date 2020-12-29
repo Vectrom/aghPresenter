@@ -11,4 +11,5 @@ public:
 private:
     PresentationWindow* m_presentationWindow;
     QPoint ScalePresenterPointToPresentationPoint(const QPoint& point);
+    void SetPenColor();
 };

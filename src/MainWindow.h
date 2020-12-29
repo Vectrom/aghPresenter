@@ -10,6 +10,9 @@ class MainWindow : public QMainWindow {
 public:
 	MainWindow(QWidget* parent = nullptr);
 
+protected:
+	bool event(QEvent* event) override;
+
 private:
 	TabWidget m_tabWidget;
 	QToolBar m_toolbar;
@@ -21,4 +24,5 @@ private:
 	void StartPresentation();
 	void StartPresentationFromCurrentSlide();
 	void StartPresentationFromSlide(int index);
+	void SetIconThemeAccordingToMacOsMode();
 };

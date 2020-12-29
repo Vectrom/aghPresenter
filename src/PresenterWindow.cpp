@@ -1,6 +1,8 @@
 #include <QCheckBox>
+#include <QColorDialog>
 #include <QHBoxLayout>
 #include <QKeyEvent>
+#include <QPushButton>
 #include <QRect>
 
 #include "Presentation.h"
@@ -27,6 +29,11 @@ PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Present
     QCheckBox* drawingCheckbox = new QCheckBox("Drawing");
     drawingCheckbox->setFocusPolicy(Qt::NoFocus);
     leftLayout->addWidget(drawingCheckbox);
+
+    QPushButton* colorsButton = new QPushButton("Change color");
+    colorsButton->setFocusPolicy(Qt::NoFocus);
+    leftLayout->addWidget(colorsButton);
+    connect(colorsButton, &QPushButton::pressed, this, &PresenterWindow::SetPenColor);
 
     //right site
     QVBoxLayout* rightLayout = new QVBoxLayout();
@@ -65,11 +72,11 @@ PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Present
 
     //draw connections
     connect(drawingCheckbox, &QCheckBox::stateChanged, &m_presentationWidget, &PresentationWidget::SetDrawingEnabled);
-    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end) {
+    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end, const QColor& color) {
         
         QPoint scaledStart = ScalePresenterPointToPresentationPoint(start);
         QPoint scaledEnd = ScalePresenterPointToPresentationPoint(end);
-        presentationWindow->m_presentationWidget.DrawLine(scaledStart, scaledEnd);
+        presentationWindow->m_presentationWidget.DrawLine(scaledStart, scaledEnd, color);
     });
 }
 
@@ -88,4 +95,11 @@ QPoint PresenterWindow::ScalePresenterPointToPresentationPoint(const QPoint& poi
     int scaledY = scaleFactorHeight * (point.y() - presenterMargins.top()) + presentationMargins.top();
 
     return QPoint(scaledX, scaledY);
+}
+
+void PresenterWindow::SetPenColor()
+{
+    QColor color = QColorDialog::getColor(m_presentationWidget.GetPenColor());
+    if (color.isValid())
+        m_presentationWidget.SetPenColor(color);
 }
