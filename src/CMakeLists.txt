@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15.5)
 set(MODULE_NAME ${CMAKE_PROJECT_NAME})
 
 set(MODULE_SOURCES
+    MacOsUtils.h
     main.cpp
     MainWindow.cpp
     MainWindow.h
@@ -31,9 +32,11 @@ set(MODULE_SOURCES
     Timer.h
 )
 
-# qt5_add_resources(RESOURCE_SOURCES resources.qrc)
-# source_group("Resource files" FILES ${RESOURCE_SOURCES})
-# source_group("Resource files" FILES resources.qrc)
+if(APPLE)
+    list(APPEND MODULE_SOURCES MacOsUtils.mm)
+else()
+    list(APPEND MODULE_SOURCES MacOsUtils.cpp)
+endif()
 
 add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}

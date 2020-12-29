@@ -1,10 +1,18 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>images/open.png</file>
-    <file>images/playSlide.png</file>
-    <file>images/playStart.png</file>
-    <file>images/settings.png</file>
-    <file>images/edit.png</file>
-    <file>images/editFill.png</file>
+    <file>icons/light/actions/open.png</file>
+    <file>icons/light/actions/playSlide.png</file>
+    <file>icons/light/actions/playStart.png</file>
+    <file>icons/light/actions/settings.png</file>
+    <file>icons/light/actions/edit.png</file>
+    <file>icons/light/actions/editFill.png</file>
+    <file>icons/light/index.theme</file>
+    <file>icons/dark/actions/open.png</file>
+    <file>icons/dark/actions/playSlide.png</file>
+    <file>icons/dark/actions/playStart.png</file>
+    <file>icons/dark/actions/settings.png</file>
+    <file>icons/dark/actions/edit.png</file>
+    <file>icons/dark/actions/editFill.png</file>
+    <file>icons/dark/index.theme</file>
 </qresource>
 </RCC>

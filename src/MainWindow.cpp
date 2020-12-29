@@ -8,6 +8,7 @@
 #include <QHBoxLayout>
 #include <poppler/qt5/poppler-qt5.h>
 
+#include "MacOsUtils.h"
 #include "MainWindow.h"
 #include "Presentation.h"
 #include "PresentationWidget.h"
@@ -25,26 +26,31 @@ MainWindow::MainWindow(QWidget* parent)
 	this->setCentralWidget(&m_tabWidget);
 	showMaximized();
 
+	if (isMacOSDarkMode())
+		QIcon::setThemeName("dark");
+	else
+		QIcon::setThemeName("light");
+
 	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
 	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
 	QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-	QAction* openDocumentAction = new QAction(QIcon(":/images/open.png"), tr("Open document"));
+	QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"));
 	connect(openDocumentAction, &QAction::triggered, this, &MainWindow::OpenDocumentActionOnClick);
 	fileMenu->addAction(openDocumentAction);
 	m_toolbar.addAction(openDocumentAction);
 
-	QAction* startPresentationAction = new QAction(QIcon(":/images/playStart.png"), tr("Start presentation"));
+	QAction* startPresentationAction = new QAction(QIcon::fromTheme("playStart"), tr("Start presentation"));
 	connect(startPresentationAction, &QAction::triggered, this, &MainWindow::StartPresentation);
 	presentationMenu->addAction(startPresentationAction);
 	m_toolbar.addAction(startPresentationAction);
 
-	QAction* startPresentationFromSlideAction = new QAction(QIcon(":/images/playSlide.png"), tr("Start presentation from current slide"));
+	QAction* startPresentationFromSlideAction = new QAction(QIcon::fromTheme("playSlide"), tr("Start presentation from current slide"));
 	connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::StartPresentationFromCurrentSlide);
 	presentationMenu->addAction(startPresentationFromSlideAction);
 	m_toolbar.addAction(startPresentationFromSlideAction);
 
-	QAction* openSettingsAction = new QAction(QIcon(":/images/settings.png"), tr("Open settings"));
+	QAction* openSettingsAction = new QAction(QIcon::fromTheme("settings"), tr("Open settings"));
 	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
 	settingsMenu->addAction(openSettingsAction);
 	m_toolbar.addAction(openSettingsAction);
