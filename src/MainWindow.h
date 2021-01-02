@@ -25,4 +25,5 @@ private:
 	void StartPresentationFromCurrentSlide();
 	void StartPresentationFromSlide(int index);
 	void SetIconThemeAccordingToMacOsMode();
+	void CreateAndSetActions();
 };

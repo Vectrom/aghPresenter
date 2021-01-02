@@ -1,4 +1,5 @@
 #include <QKeyEvent>
+#include <QSettings>
 #include "Presentation.h"
 #include "PresentationBaseWindow.h"
 
@@ -6,7 +7,6 @@ PresentationBaseWindow::PresentationBaseWindow(Presentation const& presentation,
     : m_presentationWidget(PresentationWidget(presentation, startPage, this)),
     QWidget(parent, Qt::Window)
 {
-
 }
 
 void PresentationBaseWindow::NextPage()

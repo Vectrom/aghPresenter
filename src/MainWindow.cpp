@@ -23,34 +23,18 @@ MainWindow::MainWindow(QWidget* parent)
 	this->addToolBar(&m_toolbar);
 	m_toolbar.setFloatable(false);
 	m_toolbar.setMovable(false);
+	m_toolbar.layout()->setSpacing(7);
+	setContextMenuPolicy(Qt::NoContextMenu);
 	this->setCentralWidget(&m_tabWidget);
 	showMaximized();
 
 	SetIconThemeAccordingToMacOsMode();
+	QFile file(":/style.qss");
+	file.open(QFile::ReadOnly);
+	QString styleSheet = QLatin1String(file.readAll());
+	qApp->setStyleSheet(styleSheet.arg(QIcon::themeName()));
 
-	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
-	QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
-
-	QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"));
-	connect(openDocumentAction, &QAction::triggered, this, &MainWindow::OpenDocumentActionOnClick);
-	fileMenu->addAction(openDocumentAction);
-	m_toolbar.addAction(openDocumentAction);
-
-	QAction* startPresentationAction = new QAction(QIcon::fromTheme("playStart"), tr("Start presentation"));
-	connect(startPresentationAction, &QAction::triggered, this, &MainWindow::StartPresentation);
-	presentationMenu->addAction(startPresentationAction);
-	m_toolbar.addAction(startPresentationAction);
-
-	QAction* startPresentationFromSlideAction = new QAction(QIcon::fromTheme("playSlide"), tr("Start presentation from current slide"));
-	connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::StartPresentationFromCurrentSlide);
-	presentationMenu->addAction(startPresentationFromSlideAction);
-	m_toolbar.addAction(startPresentationFromSlideAction);
-
-	QAction* openSettingsAction = new QAction(QIcon::fromTheme("settings"), tr("Open settings"));
-	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
-	settingsMenu->addAction(openSettingsAction);
-	m_toolbar.addAction(openSettingsAction);
+	CreateAndSetActions();
 }
 
 bool MainWindow::event(QEvent* event)
@@ -157,4 +141,36 @@ void MainWindow::SetIconThemeAccordingToMacOsMode()
 		QIcon::setThemeName("dark");
 	else
 		QIcon::setThemeName("light");
+}
+
+void MainWindow::CreateAndSetActions()
+{
+	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
+	QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
+
+	QAction* test = new QAction(QIcon::fromTheme("open"), tr("TEST"), this);
+	connect(test, &QAction::triggered, this, [this]() {LoadPdfFile("D:\\Studia\\Niskopoziomowe\\prezentacje\\Bootloader_3.pdf"); });
+	fileMenu->addAction(test);
+	m_toolbar.addAction(test);
+
+	QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"), this);
+	connect(openDocumentAction, &QAction::triggered, this, &MainWindow::OpenDocumentActionOnClick);
+	fileMenu->addAction(openDocumentAction);
+	m_toolbar.addAction(openDocumentAction);
+
+	QAction* startPresentationAction = new QAction(QIcon::fromTheme("playStart"), tr("Start presentation"), this);
+	connect(startPresentationAction, &QAction::triggered, this, &MainWindow::StartPresentation);
+	presentationMenu->addAction(startPresentationAction);
+	m_toolbar.addAction(startPresentationAction);
+
+	QAction* startPresentationFromSlideAction = new QAction(QIcon::fromTheme("playSlide"), tr("Start presentation from current slide"), this);
+	connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::StartPresentationFromCurrentSlide);
+	presentationMenu->addAction(startPresentationFromSlideAction);
+	m_toolbar.addAction(startPresentationFromSlideAction);
+
+	QAction* openSettingsAction = new QAction(QIcon::fromTheme("settings"), tr("Open settings"), this);
+	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
+	settingsMenu->addAction(openSettingsAction);
+	m_toolbar.addAction(openSettingsAction);
 }

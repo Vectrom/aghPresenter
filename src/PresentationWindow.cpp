@@ -21,25 +21,49 @@ PresentationWindow::PresentationWindow(Presentation const& presentation, int sta
 
     m_presentationWidget.setLayout(&m_presentationLayout);
 
-    QSettings settings("AGH", "AGHPresenter");
-    if (settings.value("showTimer", true).toBool())
-    {
-        const TimerPosition timerPosition = static_cast<TimerPosition>(settings.value("timerPosition", 1).toInt());
-        const QTime time = QTime::fromString(settings.value("startTime", "00:15:00").toString());
-        ConfigureTimer(timerPosition, time);
-    }
+    ConfigureTimers();
 }
 
-void PresentationWindow::ConfigureTimer(const TimerPosition& timerPosition, const QTime& time)
+void PresentationWindow::ShowTimer()
+{
+    ShowTimeOnLCD(m_timer);
+}
+
+void PresentationWindow::ShowDurationClock()
+{
+    ShowTimeOnLCD(m_durationClock);
+}
+
+void PresentationWindow::HideTimerAndDurationClock()
+{
+    disconnect(&m_timer, &Timer::Timeout, this, nullptr);
+    disconnect(&m_durationClock, &Timer::Timeout, this, nullptr);
+    m_lcdTimer.hide();
+}
+
+Timer& PresentationWindow::GetDurationClock()
+{
+    return m_durationClock;
+}
+
+Timer& PresentationWindow::GetTimer()
+{
+    return m_timer;
+}
+
+void PresentationWindow::ConfigureTimers()
 {   
     m_presentationLayout.addWidget(&m_lcdTimer);
     m_lcdTimer.setMinimumSize(0.2 * screen()->size().width(), 0.05 * screen()->size().height());
     m_lcdTimer.setDigitCount(8);
     m_lcdTimer.setFrameStyle(QFrame::NoFrame);
-    
-    m_lcdTimer.display(time.toString());
-    Timer* timer = new Timer(time);
-    connect(timer, &Timer::Timeout, this, [this, timer]() { m_lcdTimer.display(timer->GetCurrentTime()); });
+
+    QSettings settings("AGH", "AGHPresenter");
+
+    const QTime startTime = QTime::fromString(settings.value("startTime", "00:15:00").toString());
+    m_timer.ConfigureTimer(startTime, Timer::TimerType::Timer);
+
+    const TimerPosition timerPosition = static_cast<TimerPosition>(settings.value("timerPosition", 1).toInt());
 
     switch (timerPosition)
     {
@@ -57,4 +81,29 @@ void PresentationWindow::ConfigureTimer(const TimerPosition& timerPosition, cons
         break;
     }
 
+    const ShowOnPresentationTimerType showOnPresentation = static_cast<ShowOnPresentationTimerType>(settings.value("showOnPresentationTimer", 0).toInt());
+    switch (showOnPresentation)
+    {
+    case ShowOnPresentationTimerType::Nothing:
+        HideTimerAndDurationClock();
+        break;
+    case ShowOnPresentationTimerType::DurationClock:
+        ShowDurationClock();
+        m_durationClock.StartTimer();
+        break;
+    case ShowOnPresentationTimerType::Timer:
+        ShowTimer();
+        m_timer.StartTimer();
+        break;
+    }
+}
+
+void PresentationWindow::ShowTimeOnLCD(const Timer& timer)
+{
+    disconnect(&m_timer, &Timer::Timeout, this, nullptr);
+    disconnect(&m_durationClock, &Timer::Timeout, this, nullptr);
+    connect(&timer, &Timer::Timeout, this, [this, &timer]() { m_lcdTimer.display(timer.GetCurrentTime()); });
+
+    m_lcdTimer.display(timer.GetCurrentTime());
+    m_lcdTimer.show();
 }

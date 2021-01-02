@@ -2,20 +2,33 @@
 #include <QTime>
 #include <QTimer>
 
-class Timer : public QObject {
+class Timer : public QObject
+{
     Q_OBJECT
 
 public:
-    Timer(const QTime& time);
-    QString GetCurrentTime();
+    enum class TimerType
+    {
+        Clock,
+        Timer
+    };
+
+    Timer(const QTime& startTime = QTime(0, 0, 0), const TimerType& timerType = TimerType::Clock);
+    QString GetCurrentTime() const;
+    void ConfigureTimer(const QTime& startTime, const TimerType& timerType);
+    void StartTimer();
+    void PauseTimer();
+    void ResetTimer();
 
 signals:
     void Timeout();
 
 private:
+    void IncrementTime();
     void DecrementTime();
 
     QTimer m_timer;
     QTime m_currentTime;
-    const QTime m_startTime;
+    QTime m_startTime;
+    TimerType m_timerType;
 };

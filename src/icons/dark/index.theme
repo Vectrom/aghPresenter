@@ -4,5 +4,7 @@ Name=dark
 Directories=actions
 
 [actions]
-Size=24
-Type=Fixed
+Size=48
+Type=Scalable
+MinSize=16
+MaxSize=48

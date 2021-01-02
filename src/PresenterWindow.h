@@ -10,6 +10,18 @@ public:
 
 private:
     PresentationWindow* m_presentationWindow;
+    Timer& m_durationClock;
+    Timer& m_timer;
+    QHBoxLayout* m_mainLayout = nullptr;
+    QVBoxLayout* m_leftLayout = nullptr;
+    QVBoxLayout* m_rightLayout = nullptr;
+    PresentationWidget* m_nextPageWidget = nullptr;
+
     QPoint ScalePresenterPointToPresentationPoint(const QPoint& point);
     void SetPenColor();
+    void ConnectSignals();
+    void SetUpLeftLayout();
+    void SetUpRightLayout();
+    void SetUpClockLayout();
+    void SetUpTimerLayout();
 };
