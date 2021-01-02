@@ -21,7 +21,7 @@ PresentationWindow::PresentationWindow(Presentation const& presentation, int sta
 
     m_presentationWidget.setLayout(&m_presentationLayout);
 
-    ConfigureTimers();
+    LoadSettings();
 }
 
 void PresentationWindow::ShowTimer()
@@ -51,19 +51,14 @@ Timer& PresentationWindow::GetTimer()
     return m_timer;
 }
 
-void PresentationWindow::ConfigureTimers()
+void PresentationWindow::ConfigureTimers(const QTime& startTime, const TimerPosition& timerPosition, const ShowOnPresentationTimerType& showOnPresentation)
 {   
     m_presentationLayout.addWidget(&m_lcdTimer);
     m_lcdTimer.setMinimumSize(0.2 * screen()->size().width(), 0.05 * screen()->size().height());
     m_lcdTimer.setDigitCount(8);
     m_lcdTimer.setFrameStyle(QFrame::NoFrame);
 
-    QSettings settings("AGH", "AGHPresenter");
-
-    const QTime startTime = QTime::fromString(settings.value("startTime", "00:15:00").toString());
     m_timer.ConfigureTimer(startTime, Timer::TimerType::Timer);
-
-    const TimerPosition timerPosition = static_cast<TimerPosition>(settings.value("timerPosition", 1).toInt());
 
     switch (timerPosition)
     {
@@ -81,7 +76,6 @@ void PresentationWindow::ConfigureTimers()
         break;
     }
 
-    const ShowOnPresentationTimerType showOnPresentation = static_cast<ShowOnPresentationTimerType>(settings.value("showOnPresentationTimer", 0).toInt());
     switch (showOnPresentation)
     {
     case ShowOnPresentationTimerType::Nothing:
@@ -106,4 +100,24 @@ void PresentationWindow::ShowTimeOnLCD(const Timer& timer)
 
     m_lcdTimer.display(timer.GetCurrentTime());
     m_lcdTimer.show();
+}
+
+void PresentationWindow::LoadSettings()
+{
+    QSettings settings("AGH", "AGHPresenter");
+    QColor backgroundColor = settings.value("backgroundColor").value<QColor>();
+    SetBackgroundColor(backgroundColor);
+
+    const QTime startTime = QTime::fromString(settings.value("startTime", "00:15:00").toString());
+    const TimerPosition timerPosition = static_cast<TimerPosition>(settings.value("timerPosition", 1).toInt());
+    const ShowOnPresentationTimerType showOnPresentation = static_cast<ShowOnPresentationTimerType>(settings.value("showOnPresentationTimer", 0).toInt());
+
+    ConfigureTimers(startTime, timerPosition, showOnPresentation);
+}
+
+void PresentationWindow::SetBackgroundColor(const QColor& backgroundColor)
+{
+    QPalette pal = palette();
+    pal.setColor(QPalette::Window, backgroundColor);
+    setPalette(pal);
 }

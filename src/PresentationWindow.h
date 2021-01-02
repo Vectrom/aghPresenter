@@ -21,6 +21,8 @@ private:
     QLCDNumber m_lcdTimer;
     QHBoxLayout m_presentationLayout;
 
-    void ConfigureTimers();
+    void ConfigureTimers(const QTime& startTime, const TimerPosition& timerPosition, const ShowOnPresentationTimerType& showOnPresentation);
     void ShowTimeOnLCD(const Timer&);
+    void LoadSettings();
+    void SetBackgroundColor(const QColor& backgroundColor);
 };
