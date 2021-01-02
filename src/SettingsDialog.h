@@ -12,7 +12,7 @@ public:
     SettingsDialog(QWidget* parent = nullptr);
 
 private:
-    QCheckBox* m_showTimerOnPresentationOption = nullptr;
+    QComboBox* m_showOnPresentationComboBox = nullptr;
     QTimeEdit* m_timerStartTime = nullptr;
     QComboBox* m_timerPositionComboBox = nullptr;
 

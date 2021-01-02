@@ -6,3 +6,10 @@ enum class TimerPosition : int {
     LeftBottom,
     RightBottom
 };
+
+enum class ShowOnPresentationTimerType : int
+{
+    Nothing = 0,
+    DurationClock,
+    Timer
+};

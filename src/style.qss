@@ -1,0 +1,50 @@
+QCheckBox#drawCheckBox::indicator {
+    width: 48px;
+    height: 48px;
+}
+QCheckBox#drawCheckBox::indicator:checked {
+    image: url(:/icons/%1/actions/pen.png);
+}
+QCheckBox#drawCheckBox::indicator:unchecked {
+    image: url(:/icons/%1/actions/penOff.png);
+}
+QCheckBox#drawCheckBox::indicator:checked:hover {
+    image: url(:/icons/%1/actions/penHover.png);
+}
+QCheckBox#drawCheckBox::indicator:unchecked:hover {
+    image: url(:/icons/%1/actions/penOffHover.png);
+}
+QPushButton#playButton {
+    image: url(:/icons/%1/actions/play.png);
+    border: none;
+    width: 32px;
+    height: 32px;
+}
+QPushButton#playButton:hover {
+    image: url(:/icons/%1/actions/playHover.png);
+}
+QPushButton#pauseButton {
+    image: url(:/icons/%1/actions/pause.png);
+    border: none;
+    width: 32px;
+    height: 32px;
+}
+QPushButton#pauseButton:hover {
+    image: url(:/icons/%1/actions/pauseHover.png);
+}
+QPushButton#resetButton {
+    image: url(:/icons/%1/actions/reset.png);
+    border: none;
+    width: 32px;
+    height: 32px;
+}
+QPushButton#resetButton:hover {
+    image: url(:/icons/%1/actions/resetHover.png);
+}
+
+QPushButton#colorButton {
+    image: url(:/icons/%1/actions/palette.png);
+    border: none;
+    width: 48px;
+    height: 48px;
+}
