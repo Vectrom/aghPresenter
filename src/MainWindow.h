@@ -1,29 +1,32 @@
 #pragma once
+
+#include <optional>
 #include <QMainWindow>
 #include <QToolBar>
-#include <optional>
 
 #include "Presentation.h"
 #include "TabWidget.h"
 
-class MainWindow : public QMainWindow {
+class MainWindow final : public QMainWindow
+{
 public:
-	MainWindow(QWidget* parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
 
 protected:
-	bool event(QEvent* event) override;
+    bool event(QEvent* event) override;
 
 private:
-	TabWidget m_tabWidget;
-	QToolBar m_toolbar;
+    void createAndSetActions();
+    std::optional<Presentation> getCurrentPresentation();
+    void loadPdfFile(const QString& fileName);
+    void loadStyleSheet();
+    void openDocumentActionOnClick();
+    void openSettingsDialog();
+    void setIconThemeAccordingToMacOsMode();
+    void startPresentation();
+    void startPresentationFromCurrentSlide();
+    void startPresentationFromSlide(int index);
 
-	std::optional<Presentation> GetCurrentPresentation();
-	void OpenDocumentActionOnClick();
-	void OpenSettingsDialog();
-	void LoadPdfFile(const QString& fileName);
-	void StartPresentation();
-	void StartPresentationFromCurrentSlide();
-	void StartPresentationFromSlide(int index);
-	void SetIconThemeAccordingToMacOsMode();
-	void CreateAndSetActions();
+    TabWidget m_tabWidget;
+    QToolBar m_toolbar;
 };

@@ -1,22 +1,22 @@
 #include <QKeyEvent>
 #include <QSettings>
+
 #include "Presentation.h"
 #include "PresentationBaseWindow.h"
 
 PresentationBaseWindow::PresentationBaseWindow(Presentation const& presentation, int startPage, QWidget* parent)
     : m_presentationWidget(PresentationWidget(presentation, startPage, this)),
     QWidget(parent, Qt::Window)
+{}
+
+void PresentationBaseWindow::nextPage()
 {
+    m_presentationWidget.nextPage();
 }
 
-void PresentationBaseWindow::NextPage()
+void PresentationBaseWindow::previousPage()
 {
-    m_presentationWidget.NextPage();
-}
-
-void PresentationBaseWindow::PreviousPage()
-{
-    m_presentationWidget.PreviousPage();
+    m_presentationWidget.previousPage();
 }
 
 void PresentationBaseWindow::closeEvent(QCloseEvent* event)
@@ -31,14 +31,16 @@ void PresentationBaseWindow::keyPressEvent(QKeyEvent* event)
     {
         close();
     }
-    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Down || event->key() == Qt::Key_Space || event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Down ||
+             event->key() == Qt::Key_Space || event->key() == Qt::Key_Return ||
+             event->key() == Qt::Key_Enter)
     {
-        NextPage();
+        nextPage();
         emit nextPageRequested();
     }
     else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Up)
     {
-        PreviousPage();
+        previousPage();
         emit previousPageRequested();
     }
 }
@@ -47,12 +49,12 @@ void PresentationBaseWindow::wheelEvent(QWheelEvent* event)
 {
     if (event->angleDelta().y() > 0)
     {
-        NextPage();
+        nextPage();
         emit nextPageRequested();
     }
     else if (event->angleDelta().y() < 0)
     {
-        PreviousPage();
+        previousPage();
         emit previousPageRequested();
     }
 }

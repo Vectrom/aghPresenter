@@ -1,5 +1,6 @@
 #include "MacOsUtils.h"
 
-bool isMacOSDarkMode() {
+bool isMacOSDarkMode()
+{
     return false;
 }

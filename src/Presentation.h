@@ -1,18 +1,22 @@
 #pragma once
+
 #include <QImage>
 #include <QString>
 #include <vector>
 
-namespace Poppler { class Document;  }
+namespace Poppler { class Document; }
 
-class Presentation {
+class Presentation
+{
 public:
-    bool ReadPdfFile(QString const& fileName);
-    const QString& GetFilePath() const;
-    size_t GetNumberOfPages() const;
-    const QImage& GetPage(int index) const;
+    const QString& getFilePath() const;
+    size_t getNumberOfPages() const;
+    const QImage& getPage(int index) const;
+    bool readPdfFile(QString const& fileName);
+
 private:
-    void RenderPageToImage(Poppler::Document* document, int i, int x, int y);
+    void renderPageToImage(Poppler::Document* document, int i, int x, int y);
+
     QString m_filePath;
     std::vector<QImage> m_pages;
 };

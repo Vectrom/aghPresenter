@@ -6,17 +6,17 @@
 
 TabWidget::TabWidget(QWidget* parent) : QTabWidget(parent)
 {
-	setTabBarAutoHide(false);
-	setTabsClosable(true);
-	setMovable(true);
-	connect(this->tabBar(), &QTabBar::tabCloseRequested, this, &QTabWidget::removeTab);
+    setTabBarAutoHide(false);
+    setTabsClosable(true);
+    setMovable(true);
+    connect(this->tabBar(), &QTabBar::tabCloseRequested, this, &QTabWidget::removeTab);
 }
 
 void TabWidget::AddTab(Presentation const& presentation)
 {
-	QWidget* tabContentWidget = new Tab(presentation, this);
+    QWidget* tabContentWidget = new Tab(presentation, this);
 
-	const QString tabName = QFileInfo(presentation.GetFilePath()).baseName();
-	int index = addTab(tabContentWidget, tabName);
-	setCurrentIndex(index);
+    const QString tabName = QFileInfo(presentation.getFilePath()).baseName();
+    int index = addTab(tabContentWidget, tabName);
+    setCurrentIndex(index);
 }

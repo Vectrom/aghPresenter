@@ -6,12 +6,13 @@
 
 #define PageRole Qt::UserRole + 1
 
-class ThumbnailsListWidget : public QListWidget 
+class ThumbnailsListWidget : public QListWidget
 {
 public:
     ThumbnailsListWidget(Presentation const& presentation, QWidget* parent = nullptr);
 
 private:
-    void ThumbnailOnClick(QListWidgetItem * thumbnail);
+    void thumbnailOnClick(QListWidgetItem* thumbnail);
+
     Presentation m_presentation;
 };

@@ -8,16 +8,17 @@
 class ResizablePixmapLabel;
 class ThumbnailsListWidget;
 
-class Tab : public QWidget 
+class Tab : public QWidget
 {
 public:
     Tab(Presentation const& presentation, QWidget* parent = nullptr);
-    int GetNumberOfCurrentPage() const;
-    const Presentation& GetPresentation() const;
-    void SetPresentationPage(int index);
+    int getNumberOfCurrentPage() const;
+    const Presentation& getPresentation() const;
+    void setPresentationPage(int index);
 
 private:
-    void PageOnChanged();
+    void pageOnChanged();
+
     ResizablePixmapLabel* m_pageImageLabel;
     Presentation m_presentation;
     ThumbnailsListWidget* m_thumbnailsList;

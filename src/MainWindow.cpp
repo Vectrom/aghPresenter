@@ -1,12 +1,12 @@
+#include <poppler/qt5/poppler-qt5.h>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QWindow>
-#include <QHBoxLayout>
-#include <poppler/qt5/poppler-qt5.h>
 
 #include "MacOsUtils.h"
 #include "MainWindow.h"
@@ -18,159 +18,174 @@
 #include "Tab.h"
 
 MainWindow::MainWindow(QWidget* parent)
-	: QMainWindow(parent)
+    : QMainWindow(parent)
 {
-	this->addToolBar(&m_toolbar);
-	m_toolbar.setFloatable(false);
-	m_toolbar.setMovable(false);
-	m_toolbar.layout()->setSpacing(7);
-	setContextMenuPolicy(Qt::NoContextMenu);
-	this->setCentralWidget(&m_tabWidget);
-	showMaximized();
+    this->addToolBar(&m_toolbar);
+    m_toolbar.setFloatable(false);
+    m_toolbar.setMovable(false);
+    m_toolbar.layout()->setSpacing(7);
+    setContextMenuPolicy(Qt::NoContextMenu);
+    this->setCentralWidget(&m_tabWidget);
+    showMaximized();
 
-	SetIconThemeAccordingToMacOsMode();
-	QFile file(":/style.qss");
-	file.open(QFile::ReadOnly);
-	QString styleSheet = QLatin1String(file.readAll());
-	qApp->setStyleSheet(styleSheet.arg(QIcon::themeName()));
+    setIconThemeAccordingToMacOsMode();
+    loadStyleSheet();
 
-	CreateAndSetActions();
+    createAndSetActions();
 }
 
 bool MainWindow::event(QEvent* event)
 {
-	SetIconThemeAccordingToMacOsMode();
+    if (event->type() == QEvent::Type::PaletteChange)
+    {
+        setIconThemeAccordingToMacOsMode();
+        loadStyleSheet();
+    }
 
-	return QMainWindow::event(event);
+    return QMainWindow::event(event);
 }
 
-std::optional<Presentation> MainWindow::GetCurrentPresentation()
+void MainWindow::createAndSetActions()
 {
-	QWidget* currentWidget = m_tabWidget.currentWidget();
-	if (!currentWidget)
-		return std::nullopt;
+    QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+    QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
+    QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-	Tab* currentTab = dynamic_cast<Tab*>(currentWidget);
-	if (!currentTab)
-		return std::nullopt;
+    //ONLY TO TEST by developer, TO DO: remove before official publication
+    QAction* test = new QAction(QIcon::fromTheme("open"), tr("TEST"), this);
+    connect(test, &QAction::triggered, this, [this]() {loadPdfFile("D:\\Studia\\Niskopoziomowe\\prezentacje\\Bootloader_3.pdf"); });
+    fileMenu->addAction(test);
+    m_toolbar.addAction(test);
 
-	return currentTab->GetPresentation();
+    QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"), this);
+    connect(openDocumentAction, &QAction::triggered, this, &MainWindow::openDocumentActionOnClick);
+    fileMenu->addAction(openDocumentAction);
+    m_toolbar.addAction(openDocumentAction);
+
+    QAction* startPresentationAction = new QAction(QIcon::fromTheme("playStart"), tr("Start presentation"), this);
+    connect(startPresentationAction, &QAction::triggered, this, &MainWindow::startPresentation);
+    presentationMenu->addAction(startPresentationAction);
+    m_toolbar.addAction(startPresentationAction);
+
+    QAction* startPresentationFromSlideAction = new QAction(QIcon::fromTheme("playSlide"), tr("Start presentation from current slide"), this);
+    connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::startPresentationFromCurrentSlide);
+    presentationMenu->addAction(startPresentationFromSlideAction);
+    m_toolbar.addAction(startPresentationFromSlideAction);
+
+    QAction* openSettingsAction = new QAction(QIcon::fromTheme("settings"), tr("Open settings"), this);
+    connect(openSettingsAction, &QAction::triggered, this, &MainWindow::openSettingsDialog);
+    settingsMenu->addAction(openSettingsAction);
+    m_toolbar.addAction(openSettingsAction);
 }
 
-void MainWindow::OpenDocumentActionOnClick()
+std::optional<Presentation> MainWindow::getCurrentPresentation()
 {
-	const QString filePath = QFileDialog::getOpenFileName(this, tr("Open Document"), "", tr("PDF files (*.pdf)"));
+    QWidget* currentWidget = m_tabWidget.currentWidget();
+    if (!currentWidget)
+        return std::nullopt;
 
-	if (filePath.isEmpty())
-		return;
+    Tab* currentTab = dynamic_cast<Tab*>(currentWidget);
+    if (!currentTab)
+        return std::nullopt;
 
-	LoadPdfFile(filePath);
+    return currentTab->GetPresentation();
 }
 
-void MainWindow::OpenSettingsDialog()
+void MainWindow::loadPdfFile(const QString& filePath)
 {
-	SettingsDialog settingsDialog(this);
-	settingsDialog.exec();
+    Presentation presentation;
+    if (!presentation.readPdfFile(filePath))
+        return;
+
+    m_tabWidget.AddTab(presentation);
 }
 
-void MainWindow::LoadPdfFile(const QString& filePath)
+void MainWindow::loadStyleSheet()
 {
-	Presentation presentation;
-	if (!presentation.ReadPdfFile(filePath))
-		return;
-
-	m_tabWidget.AddTab(presentation);
+    QFile file(":/style.qss");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    qApp->setStyleSheet(styleSheet.arg(QIcon::themeName()));
 }
 
-void MainWindow::StartPresentation()
+void MainWindow::openDocumentActionOnClick()
 {
-	StartPresentationFromSlide(0);
+    const QString filePath = QFileDialog::getOpenFileName(this, tr("Open Document"), "", tr("PDF files (*.pdf)"));
+
+    if (filePath.isEmpty())
+        return;
+
+    loadPdfFile(filePath);
 }
 
-void MainWindow::StartPresentationFromCurrentSlide()
+void MainWindow::openSettingsDialog()
 {
-	QWidget * currentTabWidget = m_tabWidget.currentWidget();
-	if (!currentTabWidget)
-		return;
-
-	Tab* currentTab = dynamic_cast<Tab*>(currentTabWidget);
-	if (!currentTab)
-		return;
-
-	int startPage = currentTab->GetNumberOfCurrentPage();
-	if (startPage == -1)
-		return;
-
-	StartPresentationFromSlide(startPage);
+    SettingsDialog settingsDialog(this);
+    settingsDialog.exec();
 }
 
-void MainWindow::StartPresentationFromSlide(int index)
+void MainWindow::setIconThemeAccordingToMacOsMode()
 {
-	std::optional<Presentation> presentation = GetCurrentPresentation();
-	if (!presentation)
-		return;
-
-	const QList<QScreen*> screens = QApplication::screens();
-	
-	PresentationWindow* presentationWindow = new PresentationWindow(presentation.value(), index, this);
-	presentationWindow->show();
-	if (screens.size() == 1)
-		presentationWindow->windowHandle()->setScreen(QApplication::screens()[0]);
-	else
-		presentationWindow->windowHandle()->setScreen(QApplication::screens()[1]);
-
-	presentationWindow->showFullScreen();
-
-	if (screens.size() > 1) {
-		PresenterWindow* presenterWindow = new PresenterWindow(presentationWindow, presentation.value(), index, this);
-		presenterWindow->show();
-		presenterWindow->windowHandle()->setScreen(QApplication::screens()[0]);
-		presenterWindow->showFullScreen();
-		connect(presentationWindow, &PresentationWindow::windowClosed, presenterWindow, &PresenterWindow::close);
-		connect(presenterWindow, &PresenterWindow::windowClosed, presentationWindow, &PresentationWindow::close);
-		connect(presentationWindow, &PresentationWindow::nextPageRequested, presenterWindow, &PresenterWindow::NextPage);
-		connect(presenterWindow, &PresenterWindow::nextPageRequested, presentationWindow, &PresentationWindow::NextPage);
-		connect(presentationWindow, &PresentationWindow::previousPageRequested, presenterWindow, &PresenterWindow::PreviousPage);
-		connect(presenterWindow, &PresenterWindow::previousPageRequested, presentationWindow, &PresentationWindow::PreviousPage);
-	}
+    if (isMacOSDarkMode())
+    {
+        QIcon::setThemeName("dark");
+    }
+    else
+    {
+        QIcon::setThemeName("light");
+    }
 }
 
-void MainWindow::SetIconThemeAccordingToMacOsMode()
+void MainWindow::startPresentation()
 {
-	if (isMacOSDarkMode())
-		QIcon::setThemeName("dark");
-	else
-		QIcon::setThemeName("light");
+    startPresentationFromSlide(0);
 }
 
-void MainWindow::CreateAndSetActions()
+void MainWindow::startPresentationFromCurrentSlide()
 {
-	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-	QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
-	QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
+    QWidget* currentTabWidget = m_tabWidget.currentWidget();
+    if (!currentTabWidget)
+        return;
 
-	QAction* test = new QAction(QIcon::fromTheme("open"), tr("TEST"), this);
-	connect(test, &QAction::triggered, this, [this]() {LoadPdfFile("D:\\Studia\\Niskopoziomowe\\prezentacje\\Bootloader_3.pdf"); });
-	fileMenu->addAction(test);
-	m_toolbar.addAction(test);
+    Tab* currentTab = dynamic_cast<Tab*>(currentTabWidget);
+    if (!currentTab)
+        return;
 
-	QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"), this);
-	connect(openDocumentAction, &QAction::triggered, this, &MainWindow::OpenDocumentActionOnClick);
-	fileMenu->addAction(openDocumentAction);
-	m_toolbar.addAction(openDocumentAction);
+    int startPage = currentTab->GetNumberOfCurrentPage();
+    if (startPage == -1)
+        return;
 
-	QAction* startPresentationAction = new QAction(QIcon::fromTheme("playStart"), tr("Start presentation"), this);
-	connect(startPresentationAction, &QAction::triggered, this, &MainWindow::StartPresentation);
-	presentationMenu->addAction(startPresentationAction);
-	m_toolbar.addAction(startPresentationAction);
+    startPresentationFromSlide(startPage);
+}
 
-	QAction* startPresentationFromSlideAction = new QAction(QIcon::fromTheme("playSlide"), tr("Start presentation from current slide"), this);
-	connect(startPresentationFromSlideAction, &QAction::triggered, this, &MainWindow::StartPresentationFromCurrentSlide);
-	presentationMenu->addAction(startPresentationFromSlideAction);
-	m_toolbar.addAction(startPresentationFromSlideAction);
+void MainWindow::startPresentationFromSlide(int index)
+{
+    std::optional<Presentation> presentation = getCurrentPresentation();
+    if (!presentation)
+        return;
 
-	QAction* openSettingsAction = new QAction(QIcon::fromTheme("settings"), tr("Open settings"), this);
-	connect(openSettingsAction, &QAction::triggered, this, &MainWindow::OpenSettingsDialog);
-	settingsMenu->addAction(openSettingsAction);
-	m_toolbar.addAction(openSettingsAction);
+    const QList<QScreen*> screens = QApplication::screens();
+
+    PresentationWindow* presentationWindow = new PresentationWindow(presentation.value(), index, this);
+    presentationWindow->show();
+    if (screens.size() == 1)
+        presentationWindow->windowHandle()->setScreen(QApplication::screens()[0]);
+    else
+        presentationWindow->windowHandle()->setScreen(QApplication::screens()[1]);
+
+    presentationWindow->showFullScreen();
+
+    if (screens.size() > 1)
+    {
+        PresenterWindow* presenterWindow = new PresenterWindow(presentationWindow, presentation.value(), index, this);
+        presenterWindow->show();
+        presenterWindow->windowHandle()->setScreen(QApplication::screens()[0]);
+        presenterWindow->showFullScreen();
+        connect(presentationWindow, &PresentationWindow::windowClosed, presenterWindow, &PresenterWindow::close);
+        connect(presenterWindow, &PresenterWindow::windowClosed, presentationWindow, &PresentationWindow::close);
+        connect(presentationWindow, &PresentationWindow::nextPageRequested, presenterWindow, &PresenterWindow::nextPage);
+        connect(presenterWindow, &PresenterWindow::nextPageRequested, presentationWindow, &PresentationWindow::nextPage);
+        connect(presentationWindow, &PresentationWindow::previousPageRequested, presenterWindow, &PresenterWindow::previousPage);
+        connect(presenterWindow, &PresenterWindow::previousPageRequested, presentationWindow, &PresentationWindow::previousPage);
+    }
 }

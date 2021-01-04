@@ -1,6 +1,6 @@
 #include <QCheckBox>
-#include <QComboBox>
 #include <QColorDialog>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
@@ -21,7 +21,7 @@ SettingsDialog::SettingsDialog(QWidget* parent) :
 
     QGroupBox* presentationGroup = new QGroupBox(tr("Presentation configuration"));
     QPushButton* backgroundColorButton = new QPushButton(tr("Choose background color"));
-    connect(backgroundColorButton, &QAbstractButton::clicked, this, &SettingsDialog::ChooseBackgroundColor);
+    connect(backgroundColorButton, &QAbstractButton::clicked, this, &SettingsDialog::chooseBackgroundColor);
 
     QVBoxLayout* presentationLayout = new QVBoxLayout();
     presentationGroup->setLayout(presentationLayout);
@@ -33,7 +33,7 @@ SettingsDialog::SettingsDialog(QWidget* parent) :
     m_showOnPresentationComboBox->addItem(tr("Nothing"));
     m_showOnPresentationComboBox->addItem(tr("Duration clock"));
     m_showOnPresentationComboBox->addItem(tr("Timer"));
-   
+
     QLabel* timerStartTimeLabel = new QLabel(tr("Start time:"));
     m_timerStartTime->setDisplayFormat("hh:mm:ss");
 
@@ -67,20 +67,18 @@ SettingsDialog::SettingsDialog(QWidget* parent) :
     mainLayout->addLayout(buttonsLayout);
     setLayout(mainLayout);
 
-    RestoreSettings();
-    connect(this, &QDialog::finished, this, &SettingsDialog::SaveSettings);
+    restoreSettings();
+    connect(this, &QDialog::finished, this, &SettingsDialog::saveSettings);
 }
 
-void SettingsDialog::SaveSettings()
+void SettingsDialog::chooseBackgroundColor()
 {
-    QSettings settings("AGH", "AGHPresenter");
-    settings.setValue("backgroundColor", m_backgroundColor);
-    settings.setValue("showOnPresentationTimer", m_showOnPresentationComboBox->currentIndex());
-    settings.setValue("startTime", m_timerStartTime->time().toString());
-    settings.setValue("timerPosition", m_timerPositionComboBox->currentIndex());
+    QColor color = QColorDialog::getColor(m_backgroundColor);
+    if (color.isValid())
+        m_backgroundColor = color;
 }
 
-void SettingsDialog::RestoreSettings()
+void SettingsDialog::restoreSettings()
 {
     QSettings settings("AGH", "AGHPresenter");
     m_backgroundColor = settings.value("backgroundColor").value<QColor>();
@@ -89,9 +87,11 @@ void SettingsDialog::RestoreSettings()
     m_timerPositionComboBox->setCurrentIndex(settings.value("timerPosition", static_cast<int>(TimerPosition::RightTop)).toInt());
 }
 
-void SettingsDialog::ChooseBackgroundColor()
+void SettingsDialog::saveSettings()
 {
-    QColor color = QColorDialog::getColor(m_backgroundColor);
-    if (color.isValid())
-        m_backgroundColor = color;
+    QSettings settings("AGH", "AGHPresenter");
+    settings.setValue("backgroundColor", m_backgroundColor);
+    settings.setValue("showOnPresentationTimer", m_showOnPresentationComboBox->currentIndex());
+    settings.setValue("startTime", m_timerStartTime->time().toString());
+    settings.setValue("timerPosition", m_timerPositionComboBox->currentIndex());
 }

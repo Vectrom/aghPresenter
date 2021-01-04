@@ -1,27 +1,28 @@
 #include <QPainter>
+
 #include "ResizablePixmapLabel.h"
 
 ResizablePixmapLabel::ResizablePixmapLabel(QWidget* parent, Qt::WindowFlags f) :
     QLabel(parent, f)
 {
-	setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 }
 
 void ResizablePixmapLabel::setPixmap(QPixmap const& pixmap)
 {
-	m_pixmap = pixmap;
-	QLabel::setPixmap(m_pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    UpdateMargins();
+    m_pixmap = pixmap;
+    QLabel::setPixmap(m_pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    updateMargins();
 }
 
 void ResizablePixmapLabel::resizeEvent(QResizeEvent* event)
 {
-	QLabel::setPixmap(m_pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    UpdateMargins();
-	QLabel::resizeEvent(event);
+    QLabel::setPixmap(m_pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    updateMargins();
+    QLabel::resizeEvent(event);
 }
 
-void ResizablePixmapLabel::UpdateMargins()
+void ResizablePixmapLabel::updateMargins()
 {
     int pixmapWidth = m_pixmap.width();
     int pixmapHeight = m_pixmap.height();
@@ -46,4 +47,3 @@ void ResizablePixmapLabel::UpdateMargins()
         setContentsMargins(0, margin, 0, margin);
     }
 }
-

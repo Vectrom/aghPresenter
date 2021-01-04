@@ -1,70 +1,70 @@
 #include <poppler/qt5/poppler-qt5.h>
+#include <thread>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <thread>
 
 #include "Presentation.h"
 
-bool Presentation::ReadPdfFile(QString const& fileName)
+const QString& Presentation::getFilePath() const
 {
-	m_filePath = fileName;
-	Poppler::Document* document = Poppler::Document::load(m_filePath);
-
-	if (!document || document->isLocked())
-	{
-		delete document;
-		return false;
-	}
-
-	document->setRenderHint(Poppler::Document::TextAntialiasing);
-	document->setRenderHint(Poppler::Document::Antialiasing);
-	document->setRenderHint(Poppler::Document::TextHinting);
-	document->setRenderHint(Poppler::Document::TextSlightHinting);
-	document->setRenderHint(Poppler::Document::ThinLineSolid);
-
-	int numberOfPages = document->numPages();
-	m_pages.resize(numberOfPages);
-	std::vector<std::thread> threads;
-	threads.resize(numberOfPages);
-
-	int x = QApplication::desktop()->logicalDpiX();
-	int y = QApplication::desktop()->logicalDpiY();
-
-	for (int i = 0; i < numberOfPages; i++)
-		threads[i] = std::thread(&Presentation::RenderPageToImage, this, document, i, x, y);
-
-	for (int i = 0; i < numberOfPages; i++)
-		threads[i].join();
-
-	delete document;
-	return true;
+    return m_filePath;
 }
 
-const QString& Presentation::GetFilePath() const
+size_t Presentation::getNumberOfPages() const
 {
-	return m_filePath;
+    return m_pages.size();
 }
 
-size_t Presentation::GetNumberOfPages() const
+const QImage& Presentation::getPage(int index) const
 {
-	return m_pages.size();
+    return m_pages[index];
 }
 
-const QImage& Presentation::GetPage(int index) const
+bool Presentation::readPdfFile(QString const& fileName)
 {
-	return m_pages[index];
+    m_filePath = fileName;
+    Poppler::Document* document = Poppler::Document::load(m_filePath);
+
+    if (!document || document->isLocked())
+    {
+        delete document;
+        return false;
+    }
+
+    document->setRenderHint(Poppler::Document::TextAntialiasing);
+    document->setRenderHint(Poppler::Document::Antialiasing);
+    document->setRenderHint(Poppler::Document::TextHinting);
+    document->setRenderHint(Poppler::Document::TextSlightHinting);
+    document->setRenderHint(Poppler::Document::ThinLineSolid);
+
+    int numberOfPages = document->numPages();
+    m_pages.resize(numberOfPages);
+
+    std::vector<std::thread> threads;
+    threads.resize(numberOfPages);
+
+    int x = QApplication::desktop()->logicalDpiX();
+    int y = QApplication::desktop()->logicalDpiY();
+
+    for (int i = 0; i < numberOfPages; i++)
+        threads[i] = std::thread(&Presentation::renderPageToImage, this, document, i, x, y);
+
+    for (int i = 0; i < numberOfPages; i++)
+        threads[i].join();
+
+    delete document;
+    return true;
 }
 
-void Presentation::RenderPageToImage(Poppler::Document* document, int i, int x, int y)
+void Presentation::renderPageToImage(Poppler::Document* document, int i, int x, int y)
 {
-	Poppler::Page* pdfPage = document->page(i);
-	if (!pdfPage)
-	{
-		delete pdfPage;
-		return;
-	}
+    Poppler::Page* pdfPage = document->page(i);
+    if (!pdfPage)
+    {
+        delete pdfPage;
+        return;
+    }
 
-	m_pages[i] = pdfPage->renderToImage(x, y);
-	delete pdfPage;
+    m_pages[i] = pdfPage->renderToImage(x, y);
+    delete pdfPage;
 }
-

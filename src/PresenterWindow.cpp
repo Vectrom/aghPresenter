@@ -5,17 +5,17 @@
 #include <QPushButton>
 #include <QRect>
 
+#include "MacOsUtils.h"
 #include "Presentation.h"
+#include "PresentationWidget.h"
 #include "PresentationWindow.h"
 #include "PresenterWindow.h"
-#include "PresentationWidget.h"
-#include "MacOsUtils.h"
 
 PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Presentation const& presentation, int startPage, QWidget* parent)
     :
     m_presentationWindow(presentationWindow),
-    m_durationClock(presentationWindow->GetDurationClock()),
-    m_timer(presentationWindow->GetTimer()),
+    m_durationClock(presentationWindow->getDurationClock()),
+    m_timer(presentationWindow->getTimer()),
     m_mainLayout(new QHBoxLayout()),
     m_leftLayout(new QVBoxLayout()),
     m_rightLayout(new QVBoxLayout()),
@@ -28,6 +28,33 @@ PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Present
     SetUpRightLayout();
 
     ConnectSignals();
+}
+
+void PresenterWindow::ConnectSignals()
+{
+    //next previous page connections
+    connect(this, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(this, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPagePreview);
+
+    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPagePreview);
+
+    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
+
+    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
+    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
+
+    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
+
+    //draw connections
+    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end, const QColor& color) {
+
+        QPoint scaledStart = ScalePresenterPointToPresentationPoint(start);
+        QPoint scaledEnd = ScalePresenterPointToPresentationPoint(end);
+        m_presentationWindow->m_presentationWidget.drawLine(scaledStart, scaledEnd, color);
+    });
 }
 
 QPoint PresenterWindow::ScalePresenterPointToPresentationPoint(const QPoint& point)
@@ -49,85 +76,9 @@ QPoint PresenterWindow::ScalePresenterPointToPresentationPoint(const QPoint& poi
 
 void PresenterWindow::SetPenColor()
 {
-    QColor color = QColorDialog::getColor(m_presentationWidget.GetPenColor());
+    QColor color = QColorDialog::getColor(m_presentationWidget.getPenColor());
     if (color.isValid())
-        m_presentationWidget.SetPenColor(color);
-}
-
-void PresenterWindow::ConnectSignals()
-{
-    //next previous page connections
-    connect(this, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::NextPagePreview);
-    connect(this, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::PreviousPagePreview);
-
-    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::NextPagePreview);
-    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::PreviousPagePreview);
-
-    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::NextPagePreview);
-    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::NextPage);
-
-    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::NextPage);
-    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::NextPage);
-
-    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::NextPagePreview);
-    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::NextPage);
-
-    //draw connections
-    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end, const QColor& color) {
-
-        QPoint scaledStart = ScalePresenterPointToPresentationPoint(start);
-        QPoint scaledEnd = ScalePresenterPointToPresentationPoint(end);
-        m_presentationWindow->m_presentationWidget.DrawLine(scaledStart, scaledEnd, color);
-    });
-}
-
-void PresenterWindow::SetUpLeftLayout()
-{
-    QWidget* leftWidget = new QWidget(this);
-    m_mainLayout->addWidget(leftWidget, 2);
-    leftWidget->setLayout(m_leftLayout);
-
-    m_leftLayout->addWidget(&m_presentationWidget, 1);
-
-    QHBoxLayout* drawingLayout = new QHBoxLayout();
-    m_leftLayout->addLayout(drawingLayout);
-
-    QCheckBox* drawingCheckbox = new QCheckBox();
-    drawingLayout->addWidget(drawingCheckbox);
-    drawingCheckbox->setFocusPolicy(Qt::NoFocus);
-    drawingCheckbox->setObjectName("drawCheckBox");
-    connect(drawingCheckbox, &QCheckBox::stateChanged, &m_presentationWidget, &PresentationWidget::SetDrawingEnabled);
-
-    QPushButton* colorsButton = new QPushButton("");
-    drawingLayout->addWidget(colorsButton);
-    colorsButton->setFocusPolicy(Qt::NoFocus);
-    colorsButton->setObjectName("colorButton");
-    connect(colorsButton, &QPushButton::pressed, this, &PresenterWindow::SetPenColor);
-
-    drawingLayout->addStretch(1);
-    m_leftLayout->addStretch();
-}
-
-void PresenterWindow::SetUpRightLayout()
-{
-    QWidget* rightWidget = new QWidget(this);
-    rightWidget->setLayout(m_rightLayout);
-    m_mainLayout->addWidget(rightWidget, 1);
-
-    QLabel* nextPageTitle = new QLabel("Next page", rightWidget);
-    QFont font = nextPageTitle->font();
-    font.setPointSize(15);
-    nextPageTitle->setFont(font);
-    m_rightLayout->addWidget(nextPageTitle);
-    
-    m_nextPageWidget->setAlignment(Qt::AlignCenter);
-    m_nextPageWidget->setFrameShape(QFrame::Box);
-    m_rightLayout->addWidget(m_nextPageWidget, 1);
-
-    SetUpClockLayout();
-    SetUpTimerLayout();
-
-    m_rightLayout->addStretch(1);
+        m_presentationWidget.setPenColor(color);
 }
 
 void PresenterWindow::SetUpClockLayout()
@@ -166,6 +117,55 @@ void PresenterWindow::SetUpClockLayout()
     connect(resetClockButton, &QPushButton::clicked, &m_durationClock, &Timer::ResetTimer);
     clockLayout->addWidget(resetClockButton);
     clockLayout->addStretch(1);
+}
+
+void PresenterWindow::SetUpLeftLayout()
+{
+    QWidget* leftWidget = new QWidget(this);
+    m_mainLayout->addWidget(leftWidget, 2);
+    leftWidget->setLayout(m_leftLayout);
+
+    m_leftLayout->addWidget(&m_presentationWidget, 1);
+
+    QHBoxLayout* drawingLayout = new QHBoxLayout();
+    m_leftLayout->addLayout(drawingLayout);
+
+    QCheckBox* drawingCheckbox = new QCheckBox();
+    drawingLayout->addWidget(drawingCheckbox);
+    drawingCheckbox->setFocusPolicy(Qt::NoFocus);
+    drawingCheckbox->setObjectName("drawCheckBox");
+    connect(drawingCheckbox, &QCheckBox::stateChanged, &m_presentationWidget, &PresentationWidget::setDrawingEnabled);
+
+    QPushButton* colorsButton = new QPushButton("");
+    drawingLayout->addWidget(colorsButton);
+    colorsButton->setFocusPolicy(Qt::NoFocus);
+    colorsButton->setObjectName("colorButton");
+    connect(colorsButton, &QPushButton::pressed, this, &PresenterWindow::SetPenColor);
+
+    drawingLayout->addStretch(1);
+    m_leftLayout->addStretch();
+}
+
+void PresenterWindow::SetUpRightLayout()
+{
+    QWidget* rightWidget = new QWidget(this);
+    rightWidget->setLayout(m_rightLayout);
+    m_mainLayout->addWidget(rightWidget, 1);
+
+    QLabel* nextPageTitle = new QLabel("Next page", rightWidget);
+    QFont font = nextPageTitle->font();
+    font.setPointSize(15);
+    nextPageTitle->setFont(font);
+    m_rightLayout->addWidget(nextPageTitle);
+
+    m_nextPageWidget->setAlignment(Qt::AlignCenter);
+    m_nextPageWidget->setFrameShape(QFrame::Box);
+    m_rightLayout->addWidget(m_nextPageWidget, 1);
+
+    SetUpClockLayout();
+    SetUpTimerLayout();
+
+    m_rightLayout->addStretch(1);
 }
 
 void PresenterWindow::SetUpTimerLayout()

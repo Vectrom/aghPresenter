@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QTime>
 #include <QTimer>
 
@@ -14,21 +15,21 @@ public:
     };
 
     Timer(const QTime& startTime = QTime(0, 0, 0), const TimerType& timerType = TimerType::Clock);
-    QString GetCurrentTime() const;
-    void ConfigureTimer(const QTime& startTime, const TimerType& timerType);
-    void StartTimer();
-    void PauseTimer();
-    void ResetTimer();
+    void configureTimer(const QTime& startTime, const TimerType& timerType);
+    QString getCurrentTime() const;
+    void pauseTimer();
+    void resetTimer();
+    void startTimer();
 
 signals:
-    void Timeout();
+    void timeout();
 
 private:
-    void IncrementTime();
-    void DecrementTime();
+    void decrementTime();
+    void incrementTime();
 
-    QTimer m_timer;
     QTime m_currentTime;
     QTime m_startTime;
+    QTimer m_timer;
     TimerType m_timerType;
 };
