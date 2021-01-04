@@ -88,7 +88,7 @@ std::optional<Presentation> MainWindow::getCurrentPresentation()
     if (!currentTab)
         return std::nullopt;
 
-    return currentTab->GetPresentation();
+    return currentTab->getPresentation();
 }
 
 void MainWindow::loadPdfFile(const QString& filePath)
@@ -151,7 +151,7 @@ void MainWindow::startPresentationFromCurrentSlide()
     if (!currentTab)
         return;
 
-    int startPage = currentTab->GetNumberOfCurrentPage();
+    int startPage = currentTab->getNumberOfCurrentPage();
     if (startPage == -1)
         return;
 

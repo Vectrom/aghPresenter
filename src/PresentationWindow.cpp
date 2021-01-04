@@ -35,8 +35,8 @@ Timer& PresentationWindow::getTimer()
 
 void PresentationWindow::hideTimerAndDurationClock()
 {
-    disconnect(&m_timer, &Timer::Timeout, this, nullptr);
-    disconnect(&m_durationClock, &Timer::Timeout, this, nullptr);
+    disconnect(&m_timer, &Timer::timeout, this, nullptr);
+    disconnect(&m_durationClock, &Timer::timeout, this, nullptr);
     m_lcdTimer.hide();
 }
 
@@ -57,7 +57,7 @@ void PresentationWindow::configureTimers(const QTime& startTime, const TimerPosi
     m_lcdTimer.setDigitCount(8);
     m_lcdTimer.setFrameStyle(QFrame::NoFrame);
 
-    m_timer.ConfigureTimer(startTime, Timer::TimerType::Timer);
+    m_timer.configureTimer(startTime, Timer::TimerType::Timer);
 
     switch (timerPosition)
     {
@@ -82,11 +82,11 @@ void PresentationWindow::configureTimers(const QTime& startTime, const TimerPosi
         break;
     case ShowOnPresentationTimerType::DurationClock:
         showDurationClock();
-        m_durationClock.StartTimer();
+        m_durationClock.startTimer();
         break;
     case ShowOnPresentationTimerType::Timer:
         showTimer();
-        m_timer.StartTimer();
+        m_timer.startTimer();
         break;
     }
 }
@@ -106,11 +106,11 @@ void PresentationWindow::loadSettings()
 
 void PresentationWindow::showTimeOnLCD(const Timer& timer)
 {
-    disconnect(&m_timer, &Timer::Timeout, this, nullptr);
-    disconnect(&m_durationClock, &Timer::Timeout, this, nullptr);
-    connect(&timer, &Timer::Timeout, this, [this, &timer]() { m_lcdTimer.display(timer.GetCurrentTime()); });
+    disconnect(&m_timer, &Timer::timeout, this, nullptr);
+    disconnect(&m_durationClock, &Timer::timeout, this, nullptr);
+    connect(&timer, &Timer::timeout, this, [this, &timer]() { m_lcdTimer.display(timer.getCurrentTime()); });
 
-    m_lcdTimer.display(timer.GetCurrentTime());
+    m_lcdTimer.display(timer.getCurrentTime());
     m_lcdTimer.show();
 }
 

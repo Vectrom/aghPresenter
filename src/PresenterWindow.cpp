@@ -83,8 +83,8 @@ void PresenterWindow::SetPenColor()
 
 void PresenterWindow::SetUpClockLayout()
 {
-    m_durationClock.StartTimer();
-    m_timer.StartTimer();
+    m_durationClock.startTimer();
+    m_timer.startTimer();
     QHBoxLayout* clockLayout = new QHBoxLayout();
     m_rightLayout->addLayout(clockLayout, 1);
 
@@ -94,14 +94,14 @@ void PresenterWindow::SetUpClockLayout()
     font.setPointSize(15);
     clockDescriptionLabel->setFont(font);
 
-    QLabel* clockTimeLabel = new QLabel(m_durationClock.GetCurrentTime());
+    QLabel* clockTimeLabel = new QLabel(m_durationClock.getCurrentTime());
     clockLayout->addWidget(clockTimeLabel, 1);
     clockTimeLabel->setFont(font);
-    connect(&m_durationClock, &Timer::Timeout, this, [this, clockTimeLabel]() { clockTimeLabel->setText(m_durationClock.GetCurrentTime()); });
+    connect(&m_durationClock, &Timer::timeout, this, [this, clockTimeLabel]() { clockTimeLabel->setText(m_durationClock.getCurrentTime()); });
 
     QPushButton* startClockButton = new QPushButton("");
     clockLayout->addWidget(startClockButton);
-    connect(startClockButton, &QPushButton::clicked, &m_durationClock, &Timer::StartTimer);
+    connect(startClockButton, &QPushButton::clicked, &m_durationClock, &Timer::startTimer);
     startClockButton->setFocusPolicy(Qt::NoFocus);
     startClockButton->setObjectName("playButton");
 
@@ -109,12 +109,12 @@ void PresenterWindow::SetUpClockLayout()
     clockLayout->addWidget(stopClockButton);
     stopClockButton->setFocusPolicy(Qt::NoFocus);
     stopClockButton->setObjectName("pauseButton");
-    connect(stopClockButton, &QPushButton::clicked, &m_durationClock, &Timer::PauseTimer);
+    connect(stopClockButton, &QPushButton::clicked, &m_durationClock, &Timer::pauseTimer);
 
     QPushButton* resetClockButton = new QPushButton("");
     resetClockButton->setFocusPolicy(Qt::NoFocus);
     resetClockButton->setObjectName("resetButton");
-    connect(resetClockButton, &QPushButton::clicked, &m_durationClock, &Timer::ResetTimer);
+    connect(resetClockButton, &QPushButton::clicked, &m_durationClock, &Timer::resetTimer);
     clockLayout->addWidget(resetClockButton);
     clockLayout->addStretch(1);
 }
@@ -179,28 +179,28 @@ void PresenterWindow::SetUpTimerLayout()
     font.setPointSize(15);
     timerDescriptionLabel->setFont(font);
 
-    QLabel* timerTimeLabel = new QLabel(m_timer.GetCurrentTime());
+    QLabel* timerTimeLabel = new QLabel(m_timer.getCurrentTime());
     timerLayout->addWidget(timerTimeLabel, 1);
     timerTimeLabel->setFont(font);
-    connect(&m_timer, &Timer::Timeout, this, [this, timerTimeLabel]() { timerTimeLabel->setText(m_timer.GetCurrentTime()); });
+    connect(&m_timer, &Timer::timeout, this, [this, timerTimeLabel]() { timerTimeLabel->setText(m_timer.getCurrentTime()); });
 
     QPushButton* startTimerButton = new QPushButton("");
     timerLayout->addWidget(startTimerButton);
     startTimerButton->setFocusPolicy(Qt::NoFocus);
     startTimerButton->setObjectName("playButton");
-    connect(startTimerButton, &QPushButton::clicked, &m_timer, &Timer::StartTimer);
+    connect(startTimerButton, &QPushButton::clicked, &m_timer, &Timer::startTimer);
 
     QPushButton* stopTimerButton = new QPushButton("");
     timerLayout->addWidget(stopTimerButton);
     stopTimerButton->setFocusPolicy(Qt::NoFocus);
     stopTimerButton->setObjectName("pauseButton");
-    connect(stopTimerButton, &QPushButton::clicked, &m_timer, &Timer::PauseTimer);
+    connect(stopTimerButton, &QPushButton::clicked, &m_timer, &Timer::pauseTimer);
 
     QPushButton* resetTimerButton = new QPushButton("");
     timerLayout->addWidget(resetTimerButton);
     resetTimerButton->setFocusPolicy(Qt::NoFocus);
     resetTimerButton->setObjectName("resetButton");
-    connect(resetTimerButton, &QPushButton::clicked, &m_timer, &Timer::ResetTimer);
+    connect(resetTimerButton, &QPushButton::clicked, &m_timer, &Timer::resetTimer);
 
     timerLayout->addStretch(1);
 }
