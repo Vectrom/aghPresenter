@@ -1,10 +1,12 @@
 #include <poppler/qt5/poppler-qt5.h>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QDropEvent>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
+#include <QMimeData>
 #include <QPushButton>
 #include <QWindow>
 
@@ -28,10 +30,31 @@ MainWindow::MainWindow(QWidget* parent)
     this->setCentralWidget(&m_tabWidget);
     showMaximized();
 
+    setAcceptDrops(true);
+
     setIconThemeAccordingToMacOsMode();
     loadStyleSheet();
 
     createAndSetActions();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+    if(event->mimeData()->hasUrls())
+        event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+    const QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.empty())
+        return;
+
+    for (const auto& url : urls)
+    {
+        QString filePath = url.toLocalFile();
+        loadPdfFile(filePath);
+    }
 }
 
 bool MainWindow::event(QEvent* event)

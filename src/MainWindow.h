@@ -13,6 +13,8 @@ public:
     MainWindow(QWidget* parent = nullptr);
 
 protected:
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
     bool event(QEvent* event) override;
 
 private:

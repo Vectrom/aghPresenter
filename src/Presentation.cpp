@@ -37,14 +37,14 @@ bool Presentation::readPdfFile(QString const& fileName)
     document->setRenderHint(Poppler::Document::TextSlightHinting);
     document->setRenderHint(Poppler::Document::ThinLineSolid);
 
+    int x = QApplication::desktop()->logicalDpiX();
+    int y = QApplication::desktop()->logicalDpiY();
+
     int numberOfPages = document->numPages();
     m_pages.resize(numberOfPages);
 
     std::vector<std::thread> threads;
     threads.resize(numberOfPages);
-
-    int x = QApplication::desktop()->logicalDpiX();
-    int y = QApplication::desktop()->logicalDpiY();
 
     for (int i = 0; i < numberOfPages; i++)
         threads[i] = std::thread(&Presentation::renderPageToImage, this, document, i, x, y);
