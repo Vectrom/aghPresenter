@@ -41,6 +41,11 @@ jobs:
           cmake .. -G "Visual Studio 16 2019"
           cmake --build . --config Release
 
+      - name: Test
+        run: |
+          cd build
+          ctest --parallel 8 -VV -C Release -T test --no-compress-output --timeout 60
+
       - name: Pack
         run: |
           cd build
@@ -73,6 +78,11 @@ jobs:
           cd build
           cmake .. -G "Xcode"
           cmake --build . --config Release
+
+      - name: Test
+        run: |
+          cd build
+          ctest --parallel 8 -VV -C Release -T test --no-compress-output --timeout 60
 
       - name: Pack
         run: |
@@ -125,6 +135,11 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
+
+      - name: Test
+        run: |
+          cd build
+          ctest --parallel 8 -VV -C Release -T test --no-compress-output --timeout 60
 
       - name: Pack
         run: |
