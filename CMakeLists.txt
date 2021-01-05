@@ -43,8 +43,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if(MSVC)
+    add_compile_options(/MP)
+    add_compile_options(/w44062) # Extra warning: Enumerator 'identifier' in switch of enum 'enumeration' is not handled.
+endif()
+
 ###### Add sources ######
 add_subdirectory("src")
+
+###### Build configuration for sources from this repository ######
+if(MSVC)
+    add_compile_options(/W4 /Wall /WX)
+endif()
+
+if(UNIX OR APPLE)
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 ###### Visual Studio project configuration ######
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
