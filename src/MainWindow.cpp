@@ -38,9 +38,30 @@ MainWindow::MainWindow(QWidget* parent)
     createAndSetActions();
 }
 
+void MainWindow::runFromCommandLine(const QStringList& filePaths, bool autoClose)
+{
+    bool success = true;
+    if (!filePaths.empty())
+    {
+        for (const auto& path : filePaths)
+        {
+            if (!success)
+                break;
+
+            success = loadPdfFile(path);
+        }
+
+    }
+
+    showMaximized();
+
+    if(autoClose)
+        QTimer::singleShot(1000, [success]() { QApplication::exit(!success); });
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
-    if(event->mimeData()->hasUrls())
+    if (event->mimeData()->hasUrls())
         event->acceptProposedAction();
 }
 
@@ -114,13 +135,14 @@ std::optional<Presentation> MainWindow::getCurrentPresentation()
     return currentTab->getPresentation();
 }
 
-void MainWindow::loadPdfFile(const QString& filePath)
+bool MainWindow::loadPdfFile(const QString& filePath)
 {
     Presentation presentation;
     if (!presentation.readPdfFile(filePath))
-        return;
+        return false;
 
     m_tabWidget.AddTab(presentation);
+    return true;
 }
 
 void MainWindow::loadStyleSheet()

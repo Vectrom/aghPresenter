@@ -5,6 +5,7 @@ set(MODULE_NAME ${CMAKE_PROJECT_NAME})
 set(MODULE_SOURCES
     MacOsUtils.h
     main.cpp
+    main.h
     MainWindow.cpp
     MainWindow.h
     Presentation.cpp

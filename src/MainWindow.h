@@ -11,6 +11,7 @@ class MainWindow final : public QMainWindow
 {
 public:
     MainWindow(QWidget* parent = nullptr);
+    void runFromCommandLine(const QStringList& filePaths, bool autoClose);
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -20,7 +21,7 @@ protected:
 private:
     void createAndSetActions();
     std::optional<Presentation> getCurrentPresentation();
-    void loadPdfFile(const QString& fileName);
+    bool loadPdfFile(const QString& fileName);
     void loadStyleSheet();
     void openDocumentActionOnClick();
     void openSettingsDialog();
