@@ -50,7 +50,7 @@ endif()
 
 ###### Build configuration for sources from this repository ######
 if(MSVC)
-    add_compile_options(/W4 /Wall /WX)
+    add_compile_options(/W4 /Wall)
 endif()
 
 if(UNIX OR APPLE)
