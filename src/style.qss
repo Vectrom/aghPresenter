@@ -41,10 +41,45 @@ QPushButton#resetButton {
 QPushButton#resetButton:hover {
     image: url(:/icons/%1/actions/resetHover.png);
 }
-
 QPushButton#colorButton {
     image: url(:/icons/%1/actions/palette.png);
     border: none;
     width: 48px;
     height: 48px;
+}
+QPushButton#penSizeButton {
+    image: url(:/icons/%1/actions/penSize.png);
+    border: none;
+    width: 48px;
+    height: 48px;
+}
+QPushButton#penSizeButton:hover {
+    image: url(:/icons/%1/actions/penSizeHover.png);
+}
+QPushButton#eraserButton {
+    image: url(:/icons/%1/actions/eraser.png);
+    border: none;
+    width: 48px;
+    height: 48px;
+}
+QPushButton#eraserButton:hover {
+    image: url(:/icons/%1/actions/eraserHover.png);
+}
+QPushButton#rightButton {
+    image: url(:/icons/%1/actions/right.png);
+    border: none;
+    width: 48px;
+    height: 48px;
+}
+QPushButton#rightButton:hover {
+    image: url(:/icons/%1/actions/rightHover.png);
+}
+QPushButton#leftButton {
+    image: url(:/icons/%1/actions/left.png);
+    border: none;
+    width: 48px;
+    height: 48px;
+}
+QPushButton#leftButton:hover {
+    image: url(:/icons/%1/actions/leftHover.png);
 }

@@ -10,14 +10,20 @@ public:
     PresenterWindow(PresentationWindow* presentationWindow, Presentation const& presentation, int startPage = 0, QWidget* parent = nullptr);
 
 private:
-    void ConnectSignals();
-    QPoint ScalePresenterPointToPresentationPoint(const QPoint& point);
-    void SetPenColor();
-    void SetUpClockLayout();
-    void SetUpLeftLayout();
-    void SetUpRightLayout();
-    void SetUpTimerLayout();
+    void clearDrawingsOnCurrentSlide();
+    void connectSignals();
+    void nextPageOnAllWidgets();
+    void previousPageOnAllWidgets();
+    QPoint scalePresenterPointToPresentationPoint(const QPoint& point);
+    void setCurrentSlideNumber();
+    void setPenColor();
+    void setPenWidth();
+    void setUpClockLayout();
+    void setUpLeftLayout();
+    void setUpRightLayout();
+    void setUpTimerLayout();
 
+    QLabel m_currentSlideNumber;
     Timer& m_durationClock;
     Timer& m_timer;
     QHBoxLayout* m_mainLayout = nullptr;

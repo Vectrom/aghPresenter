@@ -15,6 +15,14 @@
     <file>icons/light/actions/reset.png</file>
     <file>icons/light/actions/resetHover.png</file>
     <file>icons/light/actions/palette.png</file>
+    <file>icons/light/actions/penSize.png</file>
+    <file>icons/light/actions/penSizeHover.png</file>
+    <file>icons/light/actions/eraser.png</file>
+    <file>icons/light/actions/eraserHover.png</file>
+    <file>icons/light/actions/left.png</file>
+    <file>icons/light/actions/leftHover.png</file>
+    <file>icons/light/actions/right.png</file>
+    <file>icons/light/actions/rightHover.png</file>
     <file>icons/light/index.theme</file>
     <file>icons/dark/actions/open.png</file>
     <file>icons/dark/actions/playSlide.png</file>
@@ -31,6 +39,14 @@
     <file>icons/dark/actions/reset.png</file>
     <file>icons/dark/actions/resetHover.png</file>
     <file>icons/dark/actions/palette.png</file>
+    <file>icons/dark/actions/penSize.png</file>
+    <file>icons/dark/actions/penSizeHover.png</file>
+    <file>icons/dark/actions/eraser.png</file>
+    <file>icons/dark/actions/eraserHover.png</file>
+    <file>icons/dark/actions/left.png</file>
+    <file>icons/dark/actions/leftHover.png</file>
+    <file>icons/dark/actions/right.png</file>
+    <file>icons/dark/actions/rightHover.png</file>
     <file>icons/dark/index.theme</file>
     <file>style.qss</file>
 </qresource>

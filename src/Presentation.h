@@ -10,7 +10,7 @@ class Presentation
 {
 public:
     const QString& getFilePath() const;
-    size_t getNumberOfPages() const;
+    int getNumberOfPages() const;
     const QImage& getPage(int index) const;
     bool readPdfFile(QString const& fileName);
 

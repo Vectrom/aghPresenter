@@ -3,9 +3,10 @@
 #include <QMouseEvent>
 #include "PresentationWidget.h"
 
-PresentationWidget::PresentationWidget(Presentation const& presentation, int startPage, QWidget* parent) :
+PresentationWidget::PresentationWidget(Presentation const& presentation, int startPage, bool isPreview, QWidget* parent) :
     m_presentation(presentation),
     m_currentPage(startPage),
+    m_isPreview(isPreview),
     ResizablePixmapLabel(parent)
 {
     if (startPage >= presentation.getNumberOfPages())
@@ -18,21 +19,36 @@ PresentationWidget::PresentationWidget(Presentation const& presentation, int sta
     m_paintImages.resize(presentation.getNumberOfPages() + 1);
 }
 
-void PresentationWidget::drawLine(const QPoint& startPoint, const QPoint& endPoint, const QColor& color)
+void PresentationWidget::drawLine(const QPoint& startPoint, const QPoint& endPoint, const QColor& color, int width)
 {
     QPainter painter(&m_paintImages[m_currentPage]);
 
-    qreal myPenWidth = 1;
-    painter.setPen(QPen(color, myPenWidth, Qt::SolidLine, Qt::RoundCap,
+    painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap,
         Qt::RoundJoin));
 
     painter.drawLine(startPoint, endPoint);
 
-    int rad = (myPenWidth / 2) + 2;
+    int rad = (width / 2) + 2;
 
     update(QRect(startPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
 
-    emit lineDrawn(startPoint, endPoint, color);
+    emit lineDrawn(startPoint, endPoint, color, width);
+}
+
+void PresentationWidget::clearCurrentPaintImage()
+{
+    m_paintImages[m_currentPage].fill(qRgba(0, 0, 0, 0));
+    update();
+}
+
+int PresentationWidget::getCurrentPageNumber() const
+{
+    return m_currentPage + 1;
+}
+
+int PresentationWidget::getNumberOfPages() const
+{
+    return m_presentation.getNumberOfPages();
 }
 
 const QColor& PresentationWidget::getPenColor() const
@@ -40,8 +56,19 @@ const QColor& PresentationWidget::getPenColor() const
     return m_penColor;
 }
 
+int PresentationWidget::getPenWidth() const
+{
+    return m_penWidth;
+}
+
 void PresentationWidget::nextPage()
 {
+    if (m_isPreview)
+    {
+        nextPagePreview();
+        return;
+    }
+
     if (m_currentPage + 1 >= m_presentation.getNumberOfPages())
         return;
 
@@ -68,6 +95,13 @@ void PresentationWidget::nextPagePreview()
 
 void PresentationWidget::previousPage()
 {
+
+    if (m_isPreview)
+    {
+        previousPagePreview();
+        return;
+    }
+
     if (m_currentPage - 1 < 0)
         return;
 
@@ -92,6 +126,11 @@ void PresentationWidget::setDrawingEnabled(bool enabled)
 void PresentationWidget::setPenColor(const QColor& color)
 {
     m_penColor = color;
+}
+
+void PresentationWidget::setPenWidth(int width)
+{
+    m_penWidth = width;
 }
 
 void PresentationWidget::mouseMoveEvent(QMouseEvent* event)
@@ -162,7 +201,7 @@ void PresentationWidget::resizeEvent(QResizeEvent* event)
 
 void PresentationWidget::drawLineTo(const QPoint& endPoint)
 {
-    drawLine(m_lastPoint, endPoint, m_penColor);
+    drawLine(m_lastPoint, endPoint, m_penColor, m_penWidth);
     m_lastPoint = endPoint;
 }
 

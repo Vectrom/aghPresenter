@@ -10,9 +10,9 @@ const QString& Presentation::getFilePath() const
     return m_filePath;
 }
 
-size_t Presentation::getNumberOfPages() const
+int Presentation::getNumberOfPages() const
 {
-    return m_pages.size();
+    return static_cast<int>(m_pages.size());
 }
 
 const QImage& Presentation::getPage(int index) const

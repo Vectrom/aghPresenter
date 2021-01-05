@@ -1,6 +1,7 @@
 #include <QCheckBox>
 #include <QColorDialog>
 #include <QHBoxLayout>
+#include <QInputDialog>
 #include <QKeyEvent>
 #include <QPushButton>
 #include <QRect>
@@ -19,45 +20,73 @@ PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Present
     m_mainLayout(new QHBoxLayout()),
     m_leftLayout(new QVBoxLayout()),
     m_rightLayout(new QVBoxLayout()),
-    m_nextPageWidget(new PresentationWidget(presentation, startPage + 1)),
+    m_nextPageWidget(new PresentationWidget(presentation, startPage + 1, true)),
     PresentationBaseWindow(presentation, startPage, parent)
 {
     setLayout(m_mainLayout);
 
-    SetUpLeftLayout();
-    SetUpRightLayout();
+    setUpLeftLayout();
+    setUpRightLayout();
 
-    ConnectSignals();
+    connectSignals();
+    setCurrentSlideNumber();
 }
 
-void PresenterWindow::ConnectSignals()
+void PresenterWindow::clearDrawingsOnCurrentSlide()
+{
+    m_presentationWidget.clearCurrentPaintImage();
+    m_presentationWindow->m_presentationWidget.clearCurrentPaintImage();
+}
+
+void PresenterWindow::connectSignals()
 {
     //next previous page connections
-    connect(this, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
-    connect(this, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPagePreview);
+    connect(this, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(this, &PresentationBaseWindow::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
+    connect(this, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPage);
+    connect(this, &PresentationBaseWindow::previousPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
-    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPagePreview);
+    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
+    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPage);
+    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
     connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
+    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
     connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
     connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
+    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPagePreview);
+    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
     connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
+    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
     //draw connections
-    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end, const QColor& color) {
+    connect(&m_presentationWidget, &PresentationWidget::lineDrawn, this, [=](const QPoint& start, const QPoint& end, const QColor& color, int width) {
 
-        QPoint scaledStart = ScalePresenterPointToPresentationPoint(start);
-        QPoint scaledEnd = ScalePresenterPointToPresentationPoint(end);
-        m_presentationWindow->m_presentationWidget.drawLine(scaledStart, scaledEnd, color);
+        QPoint scaledStart = scalePresenterPointToPresentationPoint(start);
+        QPoint scaledEnd = scalePresenterPointToPresentationPoint(end);
+        m_presentationWindow->m_presentationWidget.drawLine(scaledStart, scaledEnd, color, width);
     });
 }
 
-QPoint PresenterWindow::ScalePresenterPointToPresentationPoint(const QPoint& point)
+void PresenterWindow::nextPageOnAllWidgets()
+{
+    m_presentationWidget.nextPage();
+    m_nextPageWidget->nextPage();
+    m_presentationWindow->m_presentationWidget.nextPage();
+}
+
+void PresenterWindow::previousPageOnAllWidgets()
+{
+    m_presentationWidget.previousPage();
+    m_nextPageWidget->previousPage();
+    m_presentationWindow->m_presentationWidget.previousPage();
+}
+
+QPoint PresenterWindow::scalePresenterPointToPresentationPoint(const QPoint& point)
 {
     QRect presenterContentsRect = m_presentationWidget.contentsRect();
     QRect presentationContentsRect = m_presentationWindow->m_presentationWidget.contentsRect();
@@ -74,14 +103,32 @@ QPoint PresenterWindow::ScalePresenterPointToPresentationPoint(const QPoint& poi
     return QPoint(scaledX, scaledY);
 }
 
-void PresenterWindow::SetPenColor()
+void PresenterWindow::setCurrentSlideNumber()
+{
+    int currentPageNumber = m_presentationWidget.getCurrentPageNumber();
+    int numberOfPages = m_presentationWidget.getNumberOfPages();
+
+    QString text("Slide %1 of %2");
+    m_currentSlideNumber.setText(text.arg(currentPageNumber, 2).arg(numberOfPages, 2));
+}
+
+void PresenterWindow::setPenColor()
 {
     QColor color = QColorDialog::getColor(m_presentationWidget.getPenColor());
     if (color.isValid())
         m_presentationWidget.setPenColor(color);
 }
 
-void PresenterWindow::SetUpClockLayout()
+void PresenterWindow::setPenWidth()
+{
+    bool result;
+    int newWidth = QInputDialog::getInt(this, tr("Pen width"), tr("Select pen width (1-50):"), m_presentationWidget.getPenWidth(), 1, 50, 1, &result);
+
+    if (result)
+        m_presentationWidget.setPenWidth(newWidth);
+}
+
+void PresenterWindow::setUpClockLayout()
 {
     m_durationClock.startTimer();
     m_timer.startTimer();
@@ -119,7 +166,7 @@ void PresenterWindow::SetUpClockLayout()
     clockLayout->addStretch(1);
 }
 
-void PresenterWindow::SetUpLeftLayout()
+void PresenterWindow::setUpLeftLayout()
 {
     QWidget* leftWidget = new QWidget(this);
     m_mainLayout->addWidget(leftWidget, 2);
@@ -140,13 +187,51 @@ void PresenterWindow::SetUpLeftLayout()
     drawingLayout->addWidget(colorsButton);
     colorsButton->setFocusPolicy(Qt::NoFocus);
     colorsButton->setObjectName("colorButton");
-    connect(colorsButton, &QPushButton::pressed, this, &PresenterWindow::SetPenColor);
+    colorsButton->setToolTip("Set pen color");
+    connect(colorsButton, &QPushButton::pressed, this, &PresenterWindow::setPenColor);
+
+    QPushButton* penSizeButton = new QPushButton("");
+    drawingLayout->addWidget(penSizeButton);
+    penSizeButton->setFocusPolicy(Qt::NoFocus);
+    penSizeButton->setObjectName("penSizeButton");
+    penSizeButton->setToolTip("Set pen width");
+    connect(penSizeButton, &QPushButton::pressed, this, &PresenterWindow::setPenWidth);
+
+    QPushButton* eraserButton = new QPushButton("");
+    drawingLayout->addWidget(eraserButton);
+    eraserButton->setFocusPolicy(Qt::NoFocus);
+    eraserButton->setObjectName("eraserButton");
+    eraserButton->setToolTip("Clear current slide");
+    connect(eraserButton, &QPushButton::pressed, this, &PresenterWindow::clearDrawingsOnCurrentSlide);
 
     drawingLayout->addStretch(1);
+
+    QPushButton* leftButton = new QPushButton("");
+    drawingLayout->addWidget(leftButton);
+    leftButton->setFocusPolicy(Qt::NoFocus);
+    leftButton->setObjectName("leftButton");
+    leftButton->setToolTip("Previous slide");
+    connect(leftButton, &QPushButton::pressed, this, &PresenterWindow::previousPageOnAllWidgets);
+    connect(leftButton, &QPushButton::pressed, this, &PresenterWindow::setCurrentSlideNumber);
+
+    drawingLayout->addWidget(&m_currentSlideNumber, 1);
+    QFont font = m_currentSlideNumber.font();
+    font.setPointSize(15);
+    m_currentSlideNumber.setFont(font);
+    m_currentSlideNumber.setSizePolicy(QSizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed));
+
+    QPushButton* rightButton = new QPushButton("");
+    drawingLayout->addWidget(rightButton);
+    rightButton->setFocusPolicy(Qt::NoFocus);
+    rightButton->setObjectName("rightButton");
+    rightButton->setToolTip("Next slide");
+    connect(rightButton, &QPushButton::pressed, this, &PresenterWindow::nextPageOnAllWidgets);
+    connect(rightButton, &QPushButton::pressed, this, &PresenterWindow::setCurrentSlideNumber);
+
     m_leftLayout->addStretch();
 }
 
-void PresenterWindow::SetUpRightLayout()
+void PresenterWindow::setUpRightLayout()
 {
     QWidget* rightWidget = new QWidget(this);
     rightWidget->setLayout(m_rightLayout);
@@ -162,13 +247,13 @@ void PresenterWindow::SetUpRightLayout()
     m_nextPageWidget->setFrameShape(QFrame::Box);
     m_rightLayout->addWidget(m_nextPageWidget, 1);
 
-    SetUpClockLayout();
-    SetUpTimerLayout();
+    setUpClockLayout();
+    setUpTimerLayout();
 
     m_rightLayout->addStretch(1);
 }
 
-void PresenterWindow::SetUpTimerLayout()
+void PresenterWindow::setUpTimerLayout()
 {
     QHBoxLayout* timerLayout = new QHBoxLayout();
     m_rightLayout->addLayout(timerLayout, 1);
