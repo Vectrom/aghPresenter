@@ -14,14 +14,14 @@
 
 PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Presentation const& presentation, int startPage, QWidget* parent)
     :
-    m_presentationWindow(presentationWindow),
+    PresentationBaseWindow(presentation, startPage, parent),
     m_durationClock(presentationWindow->getDurationClock()),
     m_timer(presentationWindow->getTimer()),
     m_mainLayout(new QHBoxLayout()),
     m_leftLayout(new QVBoxLayout()),
     m_rightLayout(new QVBoxLayout()),
     m_nextPageWidget(new PresentationWidget(presentation, startPage + 1, true)),
-    PresentationBaseWindow(presentation, startPage, parent)
+    m_presentationWindow(presentationWindow)
 {
     setLayout(m_mainLayout);
 

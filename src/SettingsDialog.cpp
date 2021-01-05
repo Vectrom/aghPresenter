@@ -12,10 +12,10 @@
 #include "SettingsDialog.h"
 
 SettingsDialog::SettingsDialog(QWidget* parent) :
+    QDialog(parent, Qt::WindowCloseButtonHint),
     m_showOnPresentationComboBox(new QComboBox()),
-    m_timerStartTime(new QTimeEdit()),
     m_timerPositionComboBox(new QComboBox()),
-    QDialog(parent, Qt::WindowCloseButtonHint)
+    m_timerStartTime(new QTimeEdit())
 {
     setWindowTitle(tr("Settings"));
 

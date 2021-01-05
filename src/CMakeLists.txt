@@ -41,7 +41,7 @@ endif()
 
 add_executable(${MODULE_NAME} WIN32 MACOSX_BUNDLE
     ${MODULE_SOURCES}
-    resources.qrc  
+    resources.qrc
 )
 
 if(UNIX AND NOT APPLE)

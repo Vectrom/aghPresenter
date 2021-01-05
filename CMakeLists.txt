@@ -48,9 +48,6 @@ if(MSVC)
     add_compile_options(/w44062) # Extra warning: Enumerator 'identifier' in switch of enum 'enumeration' is not handled.
 endif()
 
-###### Add sources ######
-add_subdirectory("src")
-
 ###### Build configuration for sources from this repository ######
 if(MSVC)
     add_compile_options(/W4 /Wall /WX)
@@ -59,6 +56,9 @@ endif()
 if(UNIX OR APPLE)
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
+
+###### Add sources ######
+add_subdirectory("src")
 
 ###### Visual Studio project configuration ######
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -69,17 +69,17 @@ enable_testing()
 
 set(TESTS_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
-add_test(NAME RunWithoutCrash COMMAND "${PROJECT_NAME} " "-t" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
+add_test(NAME RunWithoutCrash COMMAND "${PROJECT_NAME}" "-t" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
 
-add_test(NAME OpenDocument COMMAND "${PROJECT_NAME} " "-t" "workingPresentation.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
+add_test(NAME OpenDocument COMMAND "${PROJECT_NAME}" "-t" "workingPresentation.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
 
-add_test(NAME OpenBrokenDocument COMMAND "${PROJECT_NAME} " "-t" "brokenPresentation.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
+add_test(NAME OpenBrokenDocument COMMAND "${PROJECT_NAME}" "-t" "brokenPresentation.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
 set_tests_properties(OpenBrokenDocument PROPERTIES WILL_FAIL TRUE)
 
-add_test(NAME OpenFileWithOtherExtension COMMAND "${PROJECT_NAME} " "-t" "otherExtension.png" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
+add_test(NAME OpenFileWithOtherExtension COMMAND "${PROJECT_NAME}" "-t" "otherExtension.png" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
 set_tests_properties(OpenFileWithOtherExtension PROPERTIES WILL_FAIL TRUE)
 
-add_test(NAME OpenNonExistingFile COMMAND "${PROJECT_NAME} " "-t" "ugabuga.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
+add_test(NAME OpenNonExistingFile COMMAND "${PROJECT_NAME}" "-t" "ugabuga.pdf" WORKING_DIRECTORY "${TESTS_WORKING_DIRECTORY}")
 set_tests_properties(OpenNonExistingFile PROPERTIES WILL_FAIL TRUE)
 
 ###### CPack configuration ######

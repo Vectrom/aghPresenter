@@ -4,10 +4,11 @@
 #include "PresentationWidget.h"
 
 PresentationWidget::PresentationWidget(Presentation const& presentation, int startPage, bool isPreview, QWidget* parent) :
-    m_presentation(presentation),
+    ResizablePixmapLabel(parent),
     m_currentPage(startPage),
     m_isPreview(isPreview),
-    ResizablePixmapLabel(parent)
+    m_presentation(presentation)
+    
 {
     if (startPage >= presentation.getNumberOfPages())
         setPixmap(QPixmap());

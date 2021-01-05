@@ -5,8 +5,8 @@
 #include "PresentationBaseWindow.h"
 
 PresentationBaseWindow::PresentationBaseWindow(Presentation const& presentation, int startPage, QWidget* parent)
-    : m_presentationWidget(PresentationWidget(presentation, startPage, false, this)),
-    QWidget(parent, Qt::Window)
+    : QWidget(parent, Qt::Window),
+     m_presentationWidget(PresentationWidget(presentation, startPage, false, this))
 {}
 
 void PresentationBaseWindow::nextPage()

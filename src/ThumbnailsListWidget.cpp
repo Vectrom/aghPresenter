@@ -8,7 +8,7 @@ ThumbnailsListWidget::ThumbnailsListWidget(Presentation const& presentation, QWi
     setMovement(QListView::Static);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-    const size_t numberOfPages = presentation.getNumberOfPages();
+    const int numberOfPages = presentation.getNumberOfPages();
     for (int i = 0; i < numberOfPages; i++)
     {
         QListWidgetItem* item = new QListWidgetItem();
@@ -26,7 +26,7 @@ ThumbnailsListWidget::ThumbnailsListWidget(Presentation const& presentation, QWi
     setCurrentItem(item(0));
 }
 
-void ThumbnailsListWidget::thumbnailOnClick(QListWidgetItem* thumbnail)
+void ThumbnailsListWidget::thumbnailOnClick(QListWidgetItem*)
 {
 
 }
