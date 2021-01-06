@@ -55,7 +55,7 @@ void MainWindow::runFromCommandLine(const QStringList& filePaths, bool autoClose
 
     showMaximized();
 
-    if(autoClose)
+    if (autoClose)
         QTimer::singleShot(1000, [success]() { QApplication::exit(!success); });
 }
 
@@ -95,12 +95,6 @@ void MainWindow::createAndSetActions()
     QMenu* presentationMenu = menuBar()->addMenu(tr("&Presentation"));
     QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-    //ONLY TO TEST by developer, TO DO: remove before official publication
-    QAction* test = new QAction(QIcon::fromTheme("open"), tr("TEST"), this);
-    connect(test, &QAction::triggered, this, [this]() {loadPdfFile("D:\\Studia\\Niskopoziomowe\\prezentacje\\Bootloader_3.pdf"); });
-    fileMenu->addAction(test);
-    m_toolbar.addAction(test);
-
     QAction* openDocumentAction = new QAction(QIcon::fromTheme("open"), tr("Open document"), this);
     connect(openDocumentAction, &QAction::triggered, this, &MainWindow::openDocumentActionOnClick);
     fileMenu->addAction(openDocumentAction);
@@ -138,10 +132,17 @@ std::optional<Presentation> MainWindow::getCurrentPresentation()
 bool MainWindow::loadPdfFile(const QString& filePath)
 {
     Presentation presentation;
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     if (!presentation.readPdfFile(filePath))
+    {
+        QApplication::restoreOverrideCursor();
         return false;
+    }
 
     m_tabWidget.AddTab(presentation);
+    QApplication::restoreOverrideCursor();
     return true;
 }
 

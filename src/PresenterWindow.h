@@ -29,6 +29,6 @@ private:
     QHBoxLayout* m_mainLayout = nullptr;
     QVBoxLayout* m_leftLayout = nullptr;
     QVBoxLayout* m_rightLayout = nullptr;
-    PresentationWidget* m_nextPageWidget = nullptr;
+    PresentationWidget m_nextPageWidget;
     PresentationWindow* m_presentationWindow;
 };

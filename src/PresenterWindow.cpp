@@ -20,7 +20,7 @@ PresenterWindow::PresenterWindow(PresentationWindow* presentationWindow, Present
     m_mainLayout(new QHBoxLayout()),
     m_leftLayout(new QVBoxLayout()),
     m_rightLayout(new QVBoxLayout()),
-    m_nextPageWidget(new PresentationWidget(presentation, startPage + 1, true)),
+    m_nextPageWidget(presentation, startPage + 1, true),
     m_presentationWindow(presentationWindow)
 {
     setLayout(m_mainLayout);
@@ -41,25 +41,25 @@ void PresenterWindow::clearDrawingsOnCurrentSlide()
 void PresenterWindow::connectSignals()
 {
     //next previous page connections
-    connect(this, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(this, &PresentationBaseWindow::nextPageRequested, &m_nextPageWidget, &PresentationWidget::nextPage);
     connect(this, &PresentationBaseWindow::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
-    connect(this, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPage);
+    connect(this, &PresentationBaseWindow::previousPageRequested, &m_nextPageWidget, &PresentationWidget::previousPage);
     connect(this, &PresentationBaseWindow::previousPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, &m_nextPageWidget, &PresentationWidget::nextPage);
     connect(m_presentationWindow, &PresentationBaseWindow::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
-    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, m_nextPageWidget, &PresentationWidget::previousPage);
+    connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, &m_nextPageWidget, &PresentationWidget::previousPage);
     connect(m_presentationWindow, &PresentationBaseWindow::previousPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, &m_nextPageWidget, &PresentationWidget::nextPage);
     connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
     connect(&m_presentationWidget, &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
-    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
-    connect(m_nextPageWidget, &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
+    connect(&m_nextPageWidget, &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
+    connect(&m_nextPageWidget, &PresentationWidget::nextPageRequested, &(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPage);
+    connect(&m_nextPageWidget, &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
-    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, m_nextPageWidget, &PresentationWidget::nextPage);
+    connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, &m_nextPageWidget, &PresentationWidget::nextPage);
     connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, &m_presentationWidget, &PresentationWidget::nextPage);
     connect(&(m_presentationWindow->m_presentationWidget), &PresentationWidget::nextPageRequested, this, &PresenterWindow::setCurrentSlideNumber);
 
@@ -75,14 +75,14 @@ void PresenterWindow::connectSignals()
 void PresenterWindow::nextPageOnAllWidgets()
 {
     m_presentationWidget.nextPage();
-    m_nextPageWidget->nextPage();
+    m_nextPageWidget.nextPage();
     m_presentationWindow->m_presentationWidget.nextPage();
 }
 
 void PresenterWindow::previousPageOnAllWidgets()
 {
     m_presentationWidget.previousPage();
-    m_nextPageWidget->previousPage();
+    m_nextPageWidget.previousPage();
     m_presentationWindow->m_presentationWidget.previousPage();
 }
 
@@ -243,9 +243,9 @@ void PresenterWindow::setUpRightLayout()
     nextPageTitle->setFont(font);
     m_rightLayout->addWidget(nextPageTitle);
 
-    m_nextPageWidget->setAlignment(Qt::AlignCenter);
-    m_nextPageWidget->setFrameShape(QFrame::Box);
-    m_rightLayout->addWidget(m_nextPageWidget, 1);
+    m_nextPageWidget.setAlignment(Qt::AlignCenter);
+    m_nextPageWidget.setFrameShape(QFrame::Box);
+    m_rightLayout->addWidget(&m_nextPageWidget, 1);
 
     setUpClockLayout();
     setUpTimerLayout();
