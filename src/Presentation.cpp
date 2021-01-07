@@ -49,8 +49,8 @@ bool Presentation::readPdfFile(QString const& fileName)
     for (int i = 0; i < numberOfPages; i++)
         threads[i] = std::thread(&Presentation::renderPageToImage, this, document, i, x, y);
 
-    for (int i = 0; i < numberOfPages; i++)
-        threads[i].join();
+    for (std::thread& thread : threads)
+        thread.join();
 
     delete document;
     return true;
