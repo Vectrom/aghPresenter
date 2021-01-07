@@ -22,4 +22,4 @@ export FONTCONFIG_PATH=/etc/fonts/
 ```
 
 ## Contributing
-If you want to contribute to AGH Presenter or compile this project on your computer, you should read [CONTRIBUTING.MD](CONTRIBUTING.MD) page.
+If you want to contribute to AGH Presenter or compile this project on your computer, you should read [CONTRIBUTING](CONTRIBUTING.md) page.
